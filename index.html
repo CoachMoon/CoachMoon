@@ -33,7 +33,25 @@
     <iframe id="modalIframe" class="w-full aspect-video rounded-xl shadow-xl" allowfullscreen></iframe>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const slider = document.querySelector('#dichvu .flex.overflow-x-auto');
+    const prevBtn = document.getElementById('prevBtnProducts');
+    const nextBtn = document.getElementById('nextBtnProducts');
 
+    const scrollAmount = 350; // số pixel mỗi lần cuộn
+
+    if (slider && prevBtn && nextBtn) {
+      prevBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+    }
+  });
+</script>
 <body class="flex flex-col min-h-screen">
   <header id="header" class="fixed top-0 left-0 w-full z-50 bg-[var(--white)] shadow-md transition-all duration-500">
     <div
@@ -260,7 +278,7 @@
           ◀
         </button>
 
-        <div id="sliderProducts" class="flex overflow-x-auto no-scrollbar space-x-6 scroll-smooth">
+        <div class="flex overflow-x-auto no-scrollbar space-x-6 scroll-smooth">
           <!-- Service Item 1 -->
           <div
             class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
