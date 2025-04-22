@@ -93,7 +93,7 @@ iframe {
   --text-purple: #d8789c;           /* Dùng cho tiêu đề phụ và đoạn văn cần nổi bật */
   --gray-800: #1f2937;              /* Màu chữ chính, đảm bảo độ tương phản tốt */
   --gray-700: #374151;              /* Màu chữ phụ hoặc heading nhẹ */
-  --gray-600: #6b7280;              /* Màu nội dung ít nổi bật hơn */
+  --gray-600: #d8789c;              /* Màu nội dung ít nổi bật hơn */
   --gray-300: #d1d5db;              /* Màu viền input hoặc border nhạt */
   --gray-50: #f9fafb;               /* Màu nền cực nhẹ, thường dùng cho section nền trắng mềm */
 
