@@ -84,9 +84,9 @@ iframe {
 
 :root {
   /* ==== BRANDING COLOR (MÀU CỦA CÁC TIÊU ĐỀ)==== */
-  --main-pink: #9a7996;             /* Màu chính của thương hiệu, dùng cho tiêu đề, nút chính */
-  --hover-pink: #eeacc4;            /* Màu khi hover nút hoặc các phần tử chính */
-  --highlight-pink: #9a7996;        /* Màu làm nền nổi bật (ví dụ section mở đầu, lộ trình) */
+  --main-pink: #f03c7e;             /* Màu chính của thương hiệu, dùng cho tiêu đề, nút chính */
+  --hover-pink: #f03c7e;            /* Màu khi hover nút hoặc các phần tử chính */
+  --highlight-pink: #eeacc4;        /* Màu làm nền nổi bật (ví dụ section mở đầu, lộ trình) */
   --deep-pink: #eeacc4;             /* Màu nhấn mạnh hơn, dùng ở nền section đặc biệt */
 
   /* ==== TEXT COLOR MÀU CHỮ ==== */
