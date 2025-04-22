@@ -131,6 +131,6 @@ iframe {
   --green-600: #16a34a;            /* Màu thông báo success (ví dụ toast thành công) */
 
   /* ==== XANH DƯƠNG – LINK & CTA NHẸ ==== */
-  --blue-500: #B7B1F2;             /* Màu hover link hoặc chữ CTA */
+  --blue-500: #e889ac;             /* Màu hover link hoặc chữ CTA */
   --blue-900: ##000000;             /* Text chính cho menu header */
 }
