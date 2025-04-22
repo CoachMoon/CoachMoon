@@ -87,7 +87,7 @@ iframe {
   --main-pink: #f03c7e;             /* Màu chính của thương hiệu, dùng cho tiêu đề, nút chính */
   --hover-pink: #ffbed6;            /* Màu khi hover nút hoặc các phần tử chính */
   --highlight-pink: #ffedfa;        /* Màu làm nền nổi bật (ví dụ section mở đầu, lộ trình) */
-  --deep-pink: #ffd5f3;             /* Màu nhấn mạnh hơn, dùng ở nền section đặc biệt */
+  --deep-pink: #db8eab;             /* Màu nhấn mạnh hơn, dùng ở nền section đặc biệt */
 
   /* ==== TEXT COLOR MÀU CHỮ ==== */
   --text-purple: #d8789c;           /* Dùng cho tiêu đề phụ và đoạn văn cần nổi bật */
