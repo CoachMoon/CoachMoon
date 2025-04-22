@@ -85,12 +85,12 @@ iframe {
 :root {
   /* ==== BRANDING COLOR (MÀU CỦA CÁC TIÊU ĐỀ)==== */
   --main-pink: #f03c7e;             /* Màu chính của thương hiệu, dùng cho tiêu đề, nút chính */
-  --hover-pink: #f03c7e;            /* Màu khi hover nút hoặc các phần tử chính */
-  --highlight-pink: #eeacc4;        /* Màu làm nền nổi bật (ví dụ section mở đầu, lộ trình) */
-  --deep-pink: #eeacc4;             /* Màu nhấn mạnh hơn, dùng ở nền section đặc biệt */
+  --hover-pink: #ffbed6;            /* Màu khi hover nút hoặc các phần tử chính */
+  --highlight-pink: #ffedfa;        /* Màu làm nền nổi bật (ví dụ section mở đầu, lộ trình) */
+  --deep-pink: #ffd5f3;             /* Màu nhấn mạnh hơn, dùng ở nền section đặc biệt */
 
   /* ==== TEXT COLOR MÀU CHỮ ==== */
-  --text-purple: #A678F8;           /* Dùng cho tiêu đề phụ và đoạn văn cần nổi bật */
+  --text-purple: #d8789c;           /* Dùng cho tiêu đề phụ và đoạn văn cần nổi bật */
   --gray-800: #1f2937;              /* Màu chữ chính, đảm bảo độ tương phản tốt */
   --gray-700: #374151;              /* Màu chữ phụ hoặc heading nhẹ */
   --gray-600: #6b7280;              /* Màu nội dung ít nổi bật hơn */
@@ -99,7 +99,7 @@ iframe {
 
   /* ==== BACKGROUND GRADIENT (MÀU NỀN) ==== */
   --form-gradient-from: #ECAAC2;         /* Dùng làm màu bắt đầu gradient cho form đăng ký */
-  --ebook-gradient-from: #EFD9FA;        /* Màu khởi đầu của gradient form ebook */
+  --ebook-gradient-from: #ffedfa;        /* Màu khởi đầu của gradient form ebook */
 
   /* ==== WHITE & BLACK ==== */
   --white: #ffffff;                /* Nền trắng hoặc text trắng */
@@ -119,8 +119,8 @@ iframe {
   --purple-50: #faf5ff;            /* Background section cực nhẹ */
   --purple-100: #f3e8ff;           /* Gradient nhẹ, làm form nền dễ nhìn */
   --purple-500: #a855f7;           /* Dùng cho border hoặc hover màu tím */
-  --purple-600: #9333ea;           /* Tiêu đề lớn hoặc nhấn mạnh */
-  --purple-700: #7e22ce;           /* Tím đậm cho chữ hoặc hover */
+  --purple-600: #f04182;           /* Tiêu đề lớn hoặc nhấn mạnh */
+  --purple-700: #f04182;           /* Tím đậm cho chữ hoặc hover */
 
   /* ==== VÀNG – ĐÁNH GIÁ (Sao đánh giá, nhấn mạnh giá trị) ==== */
   --yellow-100: #fef3c7;           /* Nền nhẹ của thông báo */
@@ -132,5 +132,5 @@ iframe {
 
   /* ==== XANH DƯƠNG – LINK & CTA NHẸ ==== */
   --blue-500: #B7B1F2;             /* Màu hover link hoặc chữ CTA */
-  --blue-900: #8E7DBE;             /* Text chính cho menu header */
+  --blue-900: ##000000;             /* Text chính cho menu header */
 }
