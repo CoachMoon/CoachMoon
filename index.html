@@ -88,43 +88,64 @@
   </header>
 
   <section class="w-full pt-32 md:pt-48 pb-10 bg-gradient-to-br from-[var(--highlight-pink)] via-[var(--white)] to-[var(--white)]">
-
     <div class="max-w-7xl mx-auto px-4">
-
-      <div class="grid md:grid-cols-2 gap-14 items-center">
-
+      <div class="grid md:grid-cols-[1fr_1.2fr] gap-14 items-center">
+        <!-- Cột ảnh (Swiper) -->
         <div class="flex justify-center md:justify-end mt-10 md:mt-0">
-          <a href="#submitform">
-            <img src="img/BANNER.png" alt="Banner"
-              class="w-full max-w-xl h-auto rounded-2xl shadow-2xl object-contain" />
-          </a>
+          <div class="w-full max-w-xl">
+            <div class="swiper mySwiper rounded-2xl shadow-2xl overflow-hidden">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <a href="#submitform" class="block">
+                  <img src="img/BANNER.png" alt="Banner 1" class="w-full h-auto object-contain" />
+                  </a>
+                </div>
+                <div class="swiper-slide">
+                  <a href="#submitform" class="block">
+                  <img src="img/BANNER2.jpg" alt="Banner 2" class="w-full h-auto object-contain" />
+                  </a>
+                </div>
+                <div class="swiper-slide">
+                  <a href="#submitform" class="block">
+                  <img src="img/BANNER3.jpg" alt="Banner 3" class="w-full h-auto object-contain" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-
-        <!-- Nội dung bên phải -->
         <div id="contents" class="text-left">
           <h1 class="text-4xl font-bold mb-8 uppercase tracking-wider text-center md:text-left" style="color: var(--main-pink);">
             CÓ PHẢI BẠN ĐANG...
           </h1>
-          <div
-            class="text-[18px] space-y-4 bg-[var(--white)] p-8 md:p-10 rounded-3xl shadow-2xl border-l-[10px] border-pink-500">
-            <p><span class="font-bold">Cảm thấy lạc lõng</span> trong sự nghiệp và cuộc sống, không rõ bước tiếp theo là
-              gì?</p>
-            <p><span class="font-bold">Mong muốn làm lại từ đầu,</span> nhưng vẫn không hiểu rõ mình thực sự muốn gì và
-              cần gì?</p>
-            <p><span class="font-bold">Đã từng là một người phụ nữ thành đạt,</span> nhưng giờ đây bạn không còn cảm
-              thấy hạnh phúc và thoả mãn như trước?</p>
-            <p><span class="font-bold">Sẵn sàng thay đổi,</span> nhưng bạn chưa tìm ra con đường cụ thể để hành động
-              mạnh mẽ và tự tin hơn?</p>
-            <p><span class="font-bold">Lo lắng về tương lai con cái,</span> và không hiểu tại sao con bạn lại có những
-              hành vi khó hiểu, dễ xúc động hay phản ứng mạnh mẽ?</p>
-            <p><span class="font-bold">Quan tâm đến sự phát triển của con,</span> năng lực bẩm sinh, tư duy não bộ,
-              phong cách học và tương tác xã hội của con cái.</p>
+          <div class="text-[18px] space-y-4 bg-[var(--white)] p-8 md:p-10 rounded-3xl shadow-2xl border-l-[10px] border-pink-500">
+            <p><span class="font-bold">Cảm thấy lạc lõng</span> trong sự nghiệp và cuộc sống, không rõ bước tiếp theo là gì?</p>
+            <p><span class="font-bold">Mong muốn làm lại từ đầu,</span> nhưng vẫn không hiểu rõ mình thực sự muốn gì và cần gì?</p>
+            <p><span class="font-bold">Đã từng là một người phụ nữ thành đạt,</span> nhưng giờ đây bạn không còn cảm thấy hạnh phúc và thoả mãn như trước?</p>
+            <p><span class="font-bold">Sẵn sàng thay đổi,</span> nhưng bạn chưa tìm ra con đường cụ thể để hành động mạnh mẽ và tự tin hơn?</p>
+            <p><span class="font-bold">Lo lắng về tương lai con cái,</span> và không hiểu tại sao con bạn lại có những hành vi khó hiểu, dễ xúc động hay phản ứng mạnh mẽ?</p>
+            <p><span class="font-bold">Quan tâm đến sự phát triển của con,</span> năng lực bẩm sinh, tư duy não bộ, phong cách học và tương tác xã hội của con cái.</p>
           </div>
         </div>
+  
       </div>
     </div>
   </section>
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper('.mySwiper', {
+      loop: true,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true,
+      },
+    });
+  </script>
 
 
   <!-- Đăng ký-->
@@ -144,12 +165,12 @@
 
           <p>Trong buổi tư vấn cá nhân 30 phút cùng Coach Moon – Nhà khai vấn quốc tế với hơn 22 năm kinh nghiệm phát
             triển con người – bạn sẽ:</p>
-          <ul class="list-disc list-inside space-y-1 pl-2">
+          <ul class="space-y-1">
             <li>✔️ Được lắng nghe và thấu hiểu từ góc nhìn khách quan</li>
             <li>✔️ Nhìn rõ hơn những điều đang cản trở bạn tiến lên</li>
             <li>✔️ Nhận định hướng hoặc đề xuất bước đi phù hợp với mục tiêu hiện tại</li>
           </ul>
-
+          
           <p><strong>Giá trị buổi tư vấn: 3.000.000đ</strong></p>
           <p><strong>Hiện đang được tư vấn miễn phí trong lần đầu tiên bạn ghé thăm website – chỉ dành cho những ai sẵn
               sàng bắt đầu hành trình thay đổi.</strong></p>
@@ -225,47 +246,44 @@
     </div>
   </section>
 
+
   <section id="about" class="bg-[var(--deep-pink)] text-[var(--white)] py-12">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+  
+        <!-- Hình ảnh -->
         <div class="flex justify-center">
           <img src="img/bbb.JPEG" class="max-h-[1000px] w-full object-contain">
         </div>
-        <div class="font-sans">
-          <p class="text-[var(--white)]-600 text-xl">
+  
+        <!-- Nội dung giới thiệu -->
+       <div class="font-sans text-base leading-relaxed space-y-4">  <!-- space-y for spacing between <p> -->
+  
           <p class="text-3xl font-serif"><strong>Tôi là...</strong></p>
-          <p class="text-3xl font-serif"><strong>COACH MOON PHAM</strong></p>
-          <p class="text-xl">
-            Một người đang sống thật – và đồng hành cùng những người phụ nữ <strong>đủ dũng cảm để sống rực rỡ từ bản
-              thể.</strong>
-            <br>
-            Tôi không hoàn hảo.
-            <br>
-            Tôi vẫn đang trên hành trình.
-            <br>
-            Nhưng tôi đã <strong>đi qua nỗi mỏi mệt mà bạn đang mang.</strong>
-            <br>
-            <strong>Từng là nữ lãnh đạo cấp cao</strong> trong ngành Marketing hơn 20 năm, tôi làm việc tại các tập đoàn
-            lớn – cả Việt Nam và đa quốc gia.
-            <br>
-            <strong>Thành công ngoài mặt. Kiệt sức bên trong.</strong>
-            <br>
-            Tôi nhận ra có rất nhiều phụ nữ giống tôi:
-            <br>
-            <strong>Giỏi giang. Độc lập. Nhưng hoang mang, cô đơn. Và ngày càng xa rời chính mình.</strong>
-            <br>
-            Nếu bạn đang tìm một người <strong>không dạy bạn sống – mà cùng bạn tìm lại chính mình,</strong>
-            <br>
-            Tôi ở đây, sẵn sàng đi cùng bạn.
-            <br>
-            With love 🩵
-          </p>
-          <img src="img/sign.png" class="w-auto h-[200px]">
-          </p>
+          <p class="text-3xl font-serif mb-6"><strong>COACH MOON PHAM</strong></p>
+  
+          <p class="text-balance">Một người đang sống thật – và đồng hành cùng những người phụ nữ <strong>đủ dũng cảm để sống rực rỡ từ bản thể.</strong></p>
+          <p>Tôi không hoàn hảo.</p>
+          <p>Tôi vẫn đang trên hành trình.</p>
+          <p>Nhưng tôi đã <strong>đi qua nỗi mỏi mệt mà bạn đang mang.</strong></p>
+  
+          <p class="text-balance"><strong>Từng là nữ lãnh đạo cấp cao</strong> trong ngành Marketing hơn 20 năm, tôi làm việc tại các tập đoàn lớn – cả Việt Nam và đa quốc gia.</p>
+          <p><strong>Thành công ngoài mặt. Kiệt sức bên trong.</strong></p>
+  
+          <p>Tôi nhận ra có rất nhiều phụ nữ giống tôi:</p>
+          <p class="text-balance"><strong>Giỏi giang. Độc lập. Nhưng hoang mang, cô đơn. Và ngày càng xa rời chính mình.</strong></p>
+  
+          <p class="text-balance">Nếu bạn đang tìm một người <strong>không dạy bạn sống – mà cùng bạn tìm lại chính mình, </strong></p>
+          <p>Tôi ở đây, sẵn sàng đi cùng bạn.</p>
+  
+          <p>With love 💜</p>
+  
+          <img src="img/sign.png" class="w-auto h-[200px] mt-4">
+  
         </div>
       </div>
+    </div>
   </section>
-
 
   <section id="dichvu" class="py-20 bg-[var(--white)]">
     <div class="max-w-6xl mx-auto px-4">
@@ -649,10 +667,11 @@
         </iframe>
       </div>
 
-      <div class="text-center mt-8">
+     <div class="text-center mt-8">
         <a href="#ebook-register"
-          class="border border-[var(--main-pink)] px-4 py-2 rounded-lg text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition">NHẬN
-          EBOOK</a>
+          class="border border-[var(--main-pink)] px-8 py-4 rounded-2xl text-xl font-semibold text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition-all duration-300 shadow-lg hover:shadow-xl">
+          NHẬN EBOOK
+        </a>
       </div>
 
       <div class="relative py-6">
@@ -1185,8 +1204,8 @@
         <div class="pb-4">
           <p class="font-semibold text-xl">8. Tôi nên chọn 2 bài test hay 3 bài?</p>
           <p class="faq-answer hidden">
-            <br>● 2 bài: Phù hợp nếu bạn muốn ra quyết định nhanh, đang cần định hướng nghề nghiệp cụ thể</br>
-            <br>● 3 bài: Dành cho người muốn hiểu sâu bản thân, khám phá ikigai và thiết kế lại toàn bộ cuộc đời</br>
+            <br>2 bài: Phù hợp nếu bạn muốn ra quyết định nhanh, đang cần định hướng nghề nghiệp cụ thể</br>
+            <br>3 bài: Dành cho người muốn hiểu sâu bản thân, khám phá ikigai và thiết kế lại toàn bộ cuộc đời</br>
           </p>
           <button onclick="toggleFAQ(this)" class="text-[var(--pink-600)] mt-2 underline text-sm">Xem thêm</button>
         </div>
