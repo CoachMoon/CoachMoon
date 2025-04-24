@@ -134,12 +134,12 @@ iframe {
   --blue-500: #e889ac;             /* Màu hover link hoặc chữ CTA */
   --blue-900: ##000000;             /* Text chính cho menu header */
 
-   /* ==== FONT SIZE ==== */
-  --fs-xs: 12px;      /* Cỡ nhỏ nhất (ghi chú, phụ đề) */
-  --fs-sm: 14px;      /* Cỡ nhỏ (text phụ) */
-  --fs-base: 16px;    /* Cỡ chuẩn dùng cho nội dung thông thường */
-  --fs-lg: 18px;      /* Cỡ lớn (dùng cho đoạn nổi bật) */
-  --fs-xl: 24px;      /* Tiêu đề phụ */
-  --fs-2xl: 32px;     /* Tiêu đề lớn */
-  --fs-3xl: 40px;     /* Tiêu đề hero/banner */
+  /* ==== FONT SIZE ==== */
+  --fs-xs: 8px;      /* Cỡ nhỏ nhất (ghi chú, phụ đề) */
+  --fs-sm: 10px;      /* Cỡ nhỏ (text phụ) */
+  --fs-base: 12px;    /* Cỡ chuẩn dùng cho nội dung thông thường */
+  --fs-lg: 14px;      /* Cỡ lớn (dùng cho đoạn nổi bật) */
+  --fs-xl: 18px;      /* Tiêu đề phụ */
+  --fs-2xl: 23px;     /* Tiêu đề lớn */
+  --fs-3xl: 28px;     /* Tiêu đề hero/banner */
 }
