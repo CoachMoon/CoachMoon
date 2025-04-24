@@ -65,7 +65,7 @@ if (slider && next && prev) {
     // Tự động trượt ảnh
     let autoSlideInterval = setInterval(scrollToNext, 5000);
     slider.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
-    slider.addEventListener('mouseleave', () => autoSlideInterval = setInterval(scrollToNext, 5000));
+    slider.addEventListener('mouseleave', () => autoSlideInterval = setInterval(scrollToNext, 3000));
 
     // Cập nhật lại scrollAmount khi thay đổi kích thước màn hình
     window.addEventListener('resize', () => {
