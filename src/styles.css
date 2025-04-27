@@ -9,6 +9,25 @@
   transition: transform 0.3s ease;
 }
 
+.dots-container {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.dot.active {
+  background-color: #ff007f; /* Màu của chấm khi đang active */
+  transform: scale(1.5);
+}
+
+
 /* Điều chỉnh các phần tử trong slider */
 @media (max-width: 1024px) {
   .slider-item {
@@ -144,3 +163,4 @@ iframe {
   --fs-2xl: 23px;     /* Tiêu đề lớn */
   --fs-3xl: 28px;     /* Tiêu đề hero/banner */
 }
+
