@@ -165,7 +165,7 @@ function toggleFAQ(button) {
   }
 }
 // gửi mail
-const scriptURL = 'https://script.google.com/macros/s/AKfycby4wgeAtNATeho_bEj5VINy-Iq0eq0zPVg7Of1qsXxxt8iAHz8UA9GZlVuvFejqff9NPQ/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyDj-FMzYQ4c7HSqGFMFMgMdJInVnB7hN4Mol76KpXrzj3ghBiaGwuEfDRjQK3R29uMIA/exec';
 const form = document.getElementById('contactForm');
 const toast = document.getElementById('toast');
 
@@ -196,7 +196,7 @@ function showToast() {
   }
 
 //   E_BOOK
-const scriptURLebook = 'https://script.google.com/macros/s/AKfycbwlKUv1Rs0787BFRL0PTPC1uX5n-QuKbNNRdnvME-Yh5yMdnBnO9J_PtgRmHbeliAZB/exec';
+const scriptURLebook = 'https://script.google.com/macros/s/AKfycbwXegkHUzRSrlSvUT0a8Kl9LTioSZXY8VEPQgrUQAKlASjk-4lvThWFNWhadjPZSlMf/exec';
 const forme = document.getElementById('contactFormEbook');
 const toaste = document.getElementById('toastEbookEbook');
 
