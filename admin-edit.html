@@ -429,7 +429,36 @@
     }
   </script>
 
+<script>
+  // Ghi đè font_names toàn cục trước khi CKEditor khởi tạo
+  CKEDITOR.config.font_names =
+    'Montserrat/Montserrat, sans-serif;' + CKEDITOR.config.font_names;
 
+  // Sau đó khởi tạo
+  CKEDITOR.replace('', {
+    contentsCss: ['/assets/fonts.css'],
+    extraPlugins: 'font',
+    toolbar: [
+      ['Font', 'FontSize'],
+      ['Bold', 'Italic', 'Underline', '-', 'RemoveFormat']
+    ]
+  });
+</script>
+<script>
+  // Ghi đè font_names toàn cục trước khi CKEditor khởi tạo
+  CKEDITOR.config.font_names =
+    'Playfair Display/Playfair Display, sans-serif;' + CKEDITOR.config.font_names;
+
+  // Sau đó khởi tạo
+  CKEDITOR.replace('', {
+    contentsCss: ['/assets/fonts.css'],
+    extraPlugins: 'font',
+    toolbar: [
+      ['Font', 'FontSize'],
+      ['Bold', 'Italic', 'Underline', '-', 'RemoveFormat']
+    ]
+  });
+</script>
 
   <section class="bg-gray-100 px-4 py-8 border-b">
     <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “CÓ PHẢI BẠN ĐANG...” (CKEditor + màu)</h2>
