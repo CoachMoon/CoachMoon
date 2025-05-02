@@ -1,0 +1,76 @@
+/* Playfair Display từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap');
+
+/* Hoặc bạn cũng có thể dùng @font-face nếu đã tải font về */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/assets/static/PlayfairDisplay-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/assets/static/PlayfairDisplay-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype'); 
+  font-weight: 100 900;  /* Định nghĩa range của biến 'wght' */
+  font-style: normal;
+}
+
+@font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-Thin.woff2') format('woff2');
+     font-weight: 100;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-Light.woff2') format('woff2');
+     font-weight: 300;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-Regular.woff2') format('woff2');
+     font-weight: 400;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-Medium.woff2') format('woff2');
+     font-weight: 500;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-SemiBold.woff2') format('woff2');
+     font-weight: 600;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-Bold.woff2') format('woff2');
+     font-weight: 700;
+     font-style: normal;
+   }
+   
+   @font-face {
+     font-family: 'Montserrat';
+     src: url('/assets/Montserrat-ExtraBold.woff2') format('woff2');
+     font-weight: 800;
+     font-style: normal;
+   }
+   
