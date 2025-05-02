@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor CKEditor + Chỉnh màu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/ckeditor_4.22.1/plugins/a11yhelp/dialogs/lang/"></script>
+  <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+  <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Một vài CSS để làm đẹp giao diện */
+    .bg-gray-100 {
+      background-color: #f7fafc;
+    }
+
+    .text-pink-600 {
+      color: #be185d;
+    }
+
+    .text-[var(--yellow-400)] {
+      color: #fbbf24;
+    }
+
+    .text-[var(--gray-700)] {
+      color: #4a5568;
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .p-2 {
+      padding: 0.5rem;
+    }
+
+    .p-4 {
+      padding: 1rem;
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .rounded {
+      border-radius: 0.375rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .mt-1 {
+      margin-top: 0.25rem;
+    }
+
+    .hover\:bg-[var(--hover-pink)] {
+      background-color: #9b2c7b;
+    }
+
+    .transition {
+      transition: background-color 0.2s ease;
+    }
+
+    .bg-[var(--main-pink)] {
+      background-color: #be185d;
+    }
+
+    .text-white {
+      color: white;
+    }
+
+    .cke_notifications_area {
+      display: none !important;
+    }
+  </style>
+  <style>
+    .scrolled {
+      background-color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    h1 {
+      font-size: var(--fs-3xl);
+    }
+
+    h2 {
+      font-size: var(--fs-2xl);
+    }
+
+    h3 {
+      font-size: var(--fs-xl);
+    }
+
+    h4 {
+      font-size: var(--fs-lg);
+    }
+
+    h5 {
+      font-size: var(--fs-base);
+    }
+
+
+    a {
+      font-size: var(--fs-base);
+    }
+
+    p,
+    li {
+      font-size: var(--fs-base);
+    }
+
+    .text-xs {
+      font-size: var(--fs-xs) !important;
+    }
+
+    .text-sm {
+      font-size: var(--fs-sm) !important;
+    }
+
+    .text-base {
+      font-size: var(--fs-base) !important;
+    }
+
+    .text-lg {
+      font-size: var(--fs-lg) !important;
+    }
+
+    .text-xl {
+      font-size: var(--fs-xl) !important;
+    }
+
+    .text-2xl {
+      font-size: var(--fs-2xl) !important;
+    }
+
+    .text-3xl {
+      font-size: var(--fs-3xl) !important;
+    }
+  </style>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<div id="videoModal"
+  class="fixed inset-0 z-[9999] bg-[var(--black)] bg-opacity-80 hidden flex justify-center items-center">
+  <div class="relative w-[90%] max-w-5xl">
+    <button onclick="closeVideoModal()"
+      class="absolute top-2 right-2 text-[var(--white)] text-3xl font-bold z-10">×</button>
+    <iframe id="modalIframe" class="w-full aspect-video rounded-xl shadow-xl" allowfullscreen></iframe>
+  </div>
+</div>
+
+
+
+
+<body class="bg-white text-gray-800">
+  <section class="bg-gray-100 px-4 py-8 border-b space-y-4">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh khoảng cách tiêu đề và nội dung</h2>
+
+    <label class="block font-semibold">Chọn tiêu đề:</label>
+    <select id="title-selector" class="w-full p-2 border rounded">
+      <option value="editable-title">CÓ PHẢI BẠN ĐANG...</option>
+      <option value="editable-booking-title">ĐẶT LỊCH TƯ VẤN MIỄN PHÍ 30 PHÚT</option>
+      <option value="subjects">ĐỐI TƯỢNG PHÙ HỢP</option>
+      <option value="editable-tools-title">TÌM HIỂU 3 CÔNG CỤ CHUYÊN SÂU</option>
+      <option value="editable-steps-title">LỘ TRÌNH 6 BƯỚC</option>
+      <option value="MY STORY-editable-steps-title">MY STORY: SỐNG RỰC RỠ</option>
+      <option value="feedback-title-render">CẢM NHẬN CỦA KHÁCH HÀNG</option>
+      <option value="faq-content-render">CÂU HỎI THƯỜNG GẶP</option>
+      <option value="ebook-main-title-render">NHẬN EBOOK</option>
+    </select>
+
+    <label class="block font-semibold mt-4">Khoảng cách (px):</label>
+    <input id="spacing-input" type="number" class="w-full p-2 border rounded" value="32" min="0" />
+
+    <button onclick="updateSpacing()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">
+      Cập nhật khoảng cách
+    </button>
+  </section>
+  <script>
+
+    function updateSpacing() {
+      const selectedId = document.getElementById('title-selector').value; // ID tiêu đề được chọn
+      const spacingValue = document.getElementById('spacing-input').value; // Giá trị khoảng cách
+
+      const title = document.getElementById(selectedId); // Lấy thẻ tiêu đề
+
+      if (title) {
+        title.style.marginBottom = spacingValue + 'px'; // Đổi khoảng cách
+      }
+    }
+  </script>
+  <section class="bg-gray-100 px-4 py-8 border-b space-y-4">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh dãn dòng cho nội dung</h2>
+
+    <label class="block font-semibold">Chọn nội dung cần chỉnh:</label>
+    <select id="content-selector" class="w-full p-2 border rounded">
+      <option value="editable-list">Nội dung 1 - CÓ PHẢI BẠN ĐANG...</option>
+      <option value="editable-booking-desc">Nội dung 2 - ĐẶT LỊCH TƯ VẤN</option>
+      <option value="editable-subjects-desc">Nội dung 3 - ĐỐI TƯỢNG PHÙ HỢP</option>
+      <option value="editable-about-desc">Nội dung 4 - GIỚI THIỆU COACH MOON</option>
+      <option value="editable-tools-content">Nội dung 5 - 3 CÔNG CỤ CHUYÊN SÂU</option>
+      <option value="editable-process-content">Nội dung 6 - QUY TRÌNH ĐĂNG KÝ</option>
+      <option value="editable-steps-content">Nội dung 7 - LỘ TRÌNH 6 BƯỚC</option>
+      <option value="MY STORY-editable-steps-content">Nội dung 8 - MY STORY</option>
+      <option value="feedback-title-render">Nội dung 9 - CẢM NHẬN KHÁCH HÀNG</option>
+      <option value="faq-content-render">Nội dung 10 - FAQ</option>
+      <option value="ebook-description-render">Nội dung 11 - EBOOK</option>
+    </select>
+
+    <label class="block font-semibold mt-4">Nhập khoảng cách dòng (line-height, ví dụ 1.5):</label>
+    <input id="line-height-input" type="number" step="0.1" class="w-full p-2 border rounded" value="1.5" min="1"
+      max="5" />
+
+    <button onclick="updateLineHeight()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">
+      Cập nhật dãn dòng
+    </button>
+  </section>
+  <script>
+    function updateLineHeight() {
+      const selectedContentId = document.getElementById('content-selector').value;
+      const selectedLineHeight = document.getElementById('line-height-input').value;
+
+      if (selectedContentId === 'faq-content-render') {
+        // Nếu là FAQ, phải set cho từng câu hỏi + câu trả lời bên trong
+        const faqItems = document.querySelectorAll('#faq-content-render *');
+        faqItems.forEach(item => {
+          item.style.lineHeight = selectedLineHeight;
+        });
+      } else {
+        // Các nội dung khác thì set bình thường
+        const content = document.getElementById(selectedContentId);
+        if (content) {
+          content.style.lineHeight = selectedLineHeight;
+        } else {
+          alert('Không tìm thấy nội dung!');
+        }
+      }
+    }
+  </script>
+  <section class="bg-gray-100 p-6 rounded-lg shadow-lg space-y-6 mb-12">
+    <h2 class="text-2xl font-bold text-pink-600 mb-4">Chỉnh sửa Header (CKEditor)</h2>
+
+    <!-- Logo (URL) -->
+    <label class="block font-semibold mb-1">Link ảnh logo:</label>
+    <input id="logo-url-input" type="text" class="w-full p-2 border rounded" placeholder="Nhập URL ảnh logo"
+      value="img/slogan-icon2.png" />
+
+    <!-- Menu -->
+    <h3 class="font-bold text-lg mt-6 mb-2">Chỉnh Menu:</h3>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-1-editor"></textarea>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-2-editor"></textarea>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-3-editor"></textarea>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-4-editor"></textarea>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-5-editor"></textarea>
+    <textarea class="ckeditor w-full border rounded" rows="2" id="menu-6-editor"></textarea>
+    <!-- Nút -->
+    <h3 class="font-bold text-lg mt-6 mb-2">Chỉnh Nút:</h3>
+    <textarea id="button-1-editor" class="w-full border rounded" rows="2"></textarea>
+    <textarea id="button-2-editor" class="w-full border rounded" rows="2"></textarea>
+
+    <button onclick="updateHeaderPreview()"
+      class="w-full mt-6 bg-pink-600 text-white font-bold py-3 rounded hover:bg-pink-700 transition">
+      Xem trước Header
+    </button>
+  </section>
+
+  <!-- Khu vực Preview -->
+  <div id="header-preview" class="bg-white shadow-md p-6 rounded-lg space-y-6">
+
+
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll('textarea.ckeditor').forEach((el) => {
+        CKEDITOR.replace(el.id, {
+          contentsCss: [
+            'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap'
+          ],
+          font_names: 'Montserrat, sans-serif;' + CKEDITOR.config.font_names,
+          toolbar: [
+            ['Font', 'FontSize'],
+            ['Bold', 'Italic', 'Underline', '-', 'RemoveFormat']
+          ]
+        });
+
+      });
+
+      // Set nội dung mặc định nếu muốn
+      const defaultData = {
+        'menu-1-editor': 'Giới thiệu',
+        'menu-2-editor': 'Về Coach Moon',
+        'menu-3-editor': 'Dịch vụ',
+        'menu-4-editor': 'Đối tượng',
+        'menu-5-editor': 'Cảm nhân KH',
+        'menu-6-editor': 'FAQ',
+        'button-1-editor': 'Đăng ký',
+        'button-2-editor': 'Đặt lịch'
+      };
+
+      for (const [id, content] of Object.entries(defaultData)) {
+        if (CKEDITOR.instances[id]) {
+          CKEDITOR.instances[id].setData(content);
+        } else {
+          // Nếu chưa khởi tạo xong thì chờ 1 tí
+          CKEDITOR.on('instanceReady', function (evt) {
+            if (evt.editor.name === id) {
+              evt.editor.setData(content);
+            }
+          });
+        }
+      }
+    });
+  </script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      // Khởi tạo từng CKEditor
+      CKEDITOR.replace('menu-1-editor');
+      CKEDITOR.replace('menu-2-editor');
+      CKEDITOR.replace('menu-3-editor');
+      CKEDITOR.replace('menu-4-editor');
+      CKEDITOR.replace('menu-5-editor');
+      CKEDITOR.replace('menu-6-editor');
+      CKEDITOR.replace('button-1-editor');
+      CKEDITOR.replace('button-2-editor');
+
+      CKEDITOR.instances['menu-1-editor'].setData('Giới thiệu');
+      CKEDITOR.instances['menu-2-editor'].setData('Về Coach Moon');
+      CKEDITOR.instances['menu-3-editor'].setData('Dịch vụ');
+      CKEDITOR.instances['menu-4-editor'].setData('Đối tượng');
+      CKEDITOR.instances['menu-5-editor'].setData('Cảm nhân KH');
+      CKEDITOR.instances['menu-6-editor'].setData('FAQ');
+      CKEDITOR.instances['button-1-editor'].setData('Đăng ký');
+      CKEDITOR.instances['button-2-editor'].setData('Đặt lịch');
+    });
+  </script>
+  <script>
+    function updateHeaderPreview() {
+      const logoUrl = document.getElementById('logo-url-input').value.trim() || 'img/slogan-icon2.png';
+      const menuTexts = [
+        CKEDITOR.instances['menu-1-editor'].getData().trim() || 'Giới thiệu',
+        CKEDITOR.instances['menu-2-editor'].getData().trim() || 'Về Coach Moon',
+        CKEDITOR.instances['menu-3-editor'].getData().trim() || 'Dịch vụ',
+        CKEDITOR.instances['menu-4-editor'].getData().trim() || 'Đối tượng ',
+        CKEDITOR.instances['menu-5-editor'].getData().trim() || 'Cảm nhân KH',
+        CKEDITOR.instances['menu-6-editor'].getData().trim() || 'FAQ',
+      ];
+      const button1Text = CKEDITOR.instances['button-1-editor'].getData().trim() || 'Đăng ký';
+      const button2Text = CKEDITOR.instances['button-2-editor'].getData().trim() || 'Đặt lịch';
+
+      const previewHTML = `
+      <header id="header" class="fixed top-0 left-0 w-full z-50 bg-[var(--white)] shadow-md transition-all duration-500">
+          <div
+            class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between h-auto md:h-28 space-y-4 md:space-y-0 relative">
+
+            <div class="w-full md:w-auto text-center md:text-left">
+              <a href="#banner" class="inline-block">
+                <img src="${logoUrl}" alt="Coachmoon Logo"
+                  class="w-auto h-auto max-h-[50px] md:max-h-[80px] mx-auto md:mx-0" />
+              </a>
+            </div>
+
+            <div
+              class="w-full flex flex-col md:flex-row md:items-center md:justify-end gap-4 text-[var(--blue-900)] font-poppins">
+
+              <nav class="flex flex-wrap justify-center md:justify-end gap-4">
+                <a href="#contents" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[0]}</a>
+                <a href="#about" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[1]}</a>
+                <a href="#dichvu" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[2]}</a>
+                <a href="#subjects" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[3]}</a>
+                <a href="#customers" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[4]}</a>
+                <a href="#faq" class="hover:text-[var(--blue-500)] text-lg font-bold">${menuTexts[5]}</a>
+              </nav>
+
+              <div class="flex justify-center md:justify-end gap-4">
+                <a href="#register-service"
+                  class="font-bold border text-lg border-[var(--main-pink)] px-2 py-1 rounded-lg text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition">
+                  Đăng
+                  ký</a>
+                <a href="#submitform"
+                  class="font-bold border text-lg border-[var(--main-pink)] px-2 py-1 rounded-lg text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition">
+                  Đặt
+                  lịch</a>
+              </div>
+            </div>
+
+          </div>
+        </header>
+    `;
+      document.getElementById('header-preview').innerHTML = previewHTML;
+    }
+  </script>
+
+
+
+  <section class="bg-gray-100 px-4 py-8 border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “CÓ PHẢI BẠN ĐANG...” (CKEditor + màu)</h2>
+
+    <label class="block font-semibold">Tiêu đề chính:</label>
+    <textarea id="editable-title-editor" rows="2" class="w-full p-2 border rounded">CÓ PHẢI BẠN ĐANG...</textarea>
+
+
+    <label class="block font-semibold">Nội dung mô tả (hỗ trợ định dạng HTML):</label>
+    <textarea id="editor-list" rows="6"
+      class="w-full border rounded">Cảm thấy lạc lõng trong sự nghiệp và cuộc sống,<br/>Mong muốn làm lại từ đầu nhưng không rõ điều mình muốn<br/>...</textarea>
+
+    <button onclick="updateContentSection()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật nội
+      dung</button>
+  </section>
+
+  <div id="output-html">
+    <section id="banner"
+      class="w-full pt-[150px] md:pt-100 pb-100 bg-gradient-to-br from-[var(--highlight-pink)] via-[var(--white)] to-[var(--white)]">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center md:items-start">
+          <!-- Banner (Swiper) -->
+          <div class="flex justify-center w-full md:w-[45%] md:mr-8 mb-6 md:mb-0 md:mt-20">
+            <div class="w-full">
+              <div class="swiper mySwiper overflow-hidden">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/BANNER.png" alt="Banner 1" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/1.jpg" alt="Banner 1" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/2.jpg" alt="Banner 2" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/3.jpg" alt="Banner 3" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/4.jpg" alt="Banner 4" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/5.jpg" alt="Banner 5" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                  <div class="swiper-slide">
+                    <a href="#dichvu" class="block">
+                      <img src="img/banner dichvu/6.jpg" alt="Banner 6" class="w-full h-auto object-contain" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- Dots -->
+              <div class="dots-container flex justify-center mt-4 mb-5">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nội dung -->
+          <div id="contents" class="text-left w-full max-w-4xl" style="max-width: 700px; margin: 0 auto;">
+            <h1 class="font-bold mb-5 uppercase tracking-wider text-center"
+              style="font-size: clamp(1.5rem, 5vw, 2.0rem); color: var(--main-pink);">
+              CÓ PHẢI BẠN ĐANG:
+            </h1>
+            <div id="editable-list">
+              <div
+                class=" text-[18px] space-y-4 bg-[var(--white)] p-8 md:p-10 rounded-3xl shadow-2xl border-l-[10px] border-b-[10px] border-pink-500"
+                style="max-width: 700px; margin: 0 auto; word-wrap: break-word; text-justify: inter-word; ">
+                <h3><span class="font-bold">Cảm thấy lạc lõng</span> trong sự nghiệp và cuộc sống, không rõ bước tiếp
+                  theo
+                  là gì ? </h3>
+                <h3><span class="font-bold">Muốn làm lại từ đầu</span> nhưng vẫn chưa thực sự hiểu rõ bản thân cần gì và
+                  muốn gì ? </h3>
+                <h3><span class="font-bold">Từng là một người phụ nữ thành đạt</span>, nhưng giờ bạn không còn cảm thấy
+                  hạnh
+                  phúc hay thoả mãn như trước ? </h3>
+                <h3><span class="font-bold">Sẵn sàng thay đổi,</span> nhưng chưa tìm ra hướng đi cụ thể để hành động
+                  mạnh
+                  mẽ, tự tin hơn ? </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function updateContentSection() {
+      const title = CKEDITOR.instances['editable-title-editor'].getData();
+      const content = CKEDITOR.instances["editor-list"].getData();
+
+      const targetTitle = document.getElementById("editable-title");
+      const targetList = document.getElementById("editable-list");
+
+      document.getElementById('editable-title').innerHTML = title;
+      targetList.innerHTML = content;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      CKEDITOR.replace("editable-title-editor");
+      CKEDITOR.replace("editor-list");
+    });
+  </script>
+
+
+  <!-- Form chỉnh sửa đặt lịch -->
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “ĐẶT LỊCH TƯ VẤN…”</h2>
+
+    <label class="block font-semibold">Tiêu đề:</label>
+    <textarea id="editable-booking-title-editor" rows="2"
+      class="w-full p-2 border rounded">ĐẶT LỊCH TƯ VẤN MIỄN PHÍ</textarea>
+
+
+    <label class="block font-semibold">Nội dung mô tả:</label>
+    <textarea id="editor-booking-desc" rows="6" class="w-full border rounded">
+    <p><strong>Một hành trình khai mở để bạn sống và làm việc rực rỡ từ chính bản thể của mình.</strong></p>
+    <p><em>"Sống rực rỡ không bắt đầu bằng thay đổi bên ngoài, mà từ việc hiểu mình là ai."</em></p>
+    <p>Trong buổi tư vấn cá nhân 30 phút cùng Coach Moon – Nhà khai vấn quốc tế với hơn 22 năm kinh nghiệm phát triển con người – bạn sẽ:</p>
+    <ul><li>✔️ Được lắng nghe và thấu hiểu từ góc nhìn khách quan</li><li>✔️ Nhìn rõ hơn những điều đang cản trở bạn tiến lên</li><li>✔️ Nhận định hướng hoặc đề xuất bước đi phù hợp với mục tiêu hiện tại</li></ul>
+    <p><strong>Giá trị buổi tư vấn: 3.000.000đ</strong></p>
+    <p><strong>Hiện đang được tư vấn miễn phí trong lần đầu tiên bạn ghé thăm website – chỉ dành cho những ai sẵn sàng bắt đầu hành trình thay đổi.</strong></p>
+    <p>Coach Moon sẽ đồng hành cùng bạn bằng sự tận tâm và tử tế, tạo nên một không gian đủ an toàn để bạn lắng nghe bản thân rõ hơn.</p>
+    <p><strong>👉 Đăng ký ngay hôm nay để giữ chỗ và bắt đầu hành trình trở về với chính mình.</strong></p>
+    </textarea>
+
+    <button onclick="updateBooking()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật phần đặt
+      lịch</button>
+  </section>
+
+  <!-- Phần hiển thị kết quả -->
+  <div id="output1-html">
+
+
+    <section id="submitform"
+      class="py-10 bg-[var(--white)] bg-gradient-to-br from-[var(--highlight-pink)] via-[var(--white)] to-[var(--white)]">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="font-bold text-center text-[var(--main-pink)] mb-5" style="font-size: clamp(1.5rem, 4vw, 2.0rem);">
+          <div id="editable-booking-title" class="flex flex-wrap justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+            <h2 class="leading-tight w-full sm:w-auto">ĐẶT LỊCH</h2>
+            <h2 class="leading-tight w-full sm:w-auto">TƯ VẤN MIỄN PHÍ</h2>
+            <h2 class="leading-tight w-full sm:w-auto">CÙNG COACH MOON</h2>
+          </div>
+        </div>
+
+
+
+        <div class="grid md:grid-cols-12 gap-10 items-center">
+
+          <!-- Mô tả -->
+          <div id="editable-booking-desc"
+            class="md:col-span-7 space-y-4 text-[var(--gray-800)] text-[16px] leading-relaxed">
+            <h3><strong>Một hành trình khai mở để bạn sống và làm việc rực rỡ từ chính bản thể của mình.</strong></h3>
+            <h3><em>"Sống rực rỡ không bắt đầu bằng thay đổi bên ngoài, mà từ việc hiểu mình là ai."</em></h3>
+
+            <h3>Trong buổi tư vấn cá nhân 30 phút cùng Coach Moon – Nhà khai vấn quốc tế với hơn 22 năm kinh nghiệm phát
+              triển con người – bạn sẽ:</h3>
+
+            <h3>✔️ Được lắng nghe và thấu hiểu từ góc nhìn khách quan</h3>
+            <h3>✔️ Nhìn rõ hơn những điều đang cản trở bạn tiến lên</h3>
+            <h3>✔️ Nhận định hướng hoặc đề xuất bước đi phù hợp với mục tiêu hiện tại</h3>
+
+            <h3><strong>Giá trị buổi tư vấn: 3.000.000đ</strong></h3>
+            <h3><strong>Hiện đang được tư vấn miễn phí trong lần đầu tiên bạn ghé thăm website – chỉ dành cho những ai
+                sẵn
+                sàng bắt đầu hành trình thay đổi.</strong></h3>
+
+            <h3>Coach Moon sẽ đồng hành cùng bạn bằng sự tận tâm và tử tế, tạo nên một không gian đủ an toàn để bạn lắng
+              nghe bản thân rõ hơn.</h3>
+
+            <h3><strong>👉Đăng ký ngay hôm nay để giữ chỗ và bắt đầu hành trình trở về với chính mình.</strong></h3>
+          </div>
+
+          <!-- Form -->
+          <div class="md:col-span-5 w-full" style="max-width: 500px; margin: 0 auto;">
+            <iframe src="https://calendly.com/coachmoonpham/free-seminar?month=2025-04&date=2025-04-22"
+              class="w-full h-[500px] rounded-xl border-none shadow-lg" frameborder="0" scrolling="no">
+            </iframe>
+          </div>
+
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+
+  <script>
+    function updateBooking() {
+      const title = CKEDITOR.instances['editable-booking-title-editor'].getData();
+      const desc = CKEDITOR.instances["editor-booking-desc"].getData();
+
+      document.getElementById("editable-booking-title").innerHTML = title;
+      document.getElementById("editable-booking-desc").innerHTML = desc;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.replace("editable-booking-title-editor");
+        CKEDITOR.replace("editor-booking-desc");
+      }
+    });
+  </script>
+
+
+  <!-- Form chỉnh sửa Đối tượng phù hợp -->
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “ĐỐI TƯỢNG PHÙ HỢP”</h2>
+
+    <label class="block font-semibold">Tiêu đề:</label>
+    <textarea id="subjects-editor" rows="2"
+      class="w-full p-2 border rounded">DÀNH CHO NHỮNG NGƯỜI ĐANG Ở NGÃ BA CUỘC ĐỜI..</textarea>
+
+    <label class="block font-semibold">Nội dung mô tả + danh sách:</label>
+    <textarea id="editor-subjects-desc" rows="8" class="w-full border rounded">
+<p>Bạn khao khát sống đúng với giá trị thật của mình – không chỉ <strong>sống giỏi</strong>, mà còn muốn <strong>sống đúng – sống sâu – sống tự do</strong>.</p>
+<ul>
+  <li>➤ Bạn là <strong>freelancer, coach</strong> hoặc <strong>chuyên gia tư vấn</strong> trong lĩnh vực riêng của mình.</li>
+  <li>➤ Bạn đang <strong>kinh doanh nhỏ lẻ</strong>, online hoặc truyền thống và tìm kiếm định hướng phát triển mới.</li>
+  <li>➤ Bạn là <strong>founder – chủ doanh nghiệp nhỏ & vừa</strong>, đang xây dựng thương hiệu cá nhân bền vững.</li>
+  <li>➤ Bạn là <strong>chuyên viên, quản lý</strong> từng đi làm thuê 3–5 năm trở lên, đang cảm thấy hoang mang hoặc mất kết nối với công việc.</li>
+  <li>➤ Bạn từng <strong>mạnh mẽ, độc lập</strong>… nhưng giờ cảm thấy trống rỗng và cần một hướng đi mới trong cuộc đời.</li>
+  <li>➤ Bạn quan tâm đến sự phát triển của con cái (13–18 tuổi) – đang ở lứa tuổi cần định hướng sự nghiệp, và bạn nhận ra rằng: <em>“Muốn đồng hành đúng với con, mình phải hiểu rõ bản thân trước.”</em></li>
+</ul>
+</textarea>
+
+    <button onclick="updateSubjects()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật phần đối
+      tượng</button>
+  </section>
+
+  <!-- Phần hiển thị -->
+  <div id="output2-html">
+    <section class="py-20 bg-gradient-to-br from-pink-100 via-white to-white">
+      <div class="max-w-5xl mx-auto px-6 text-center">
+        <h2 id="subjects" class="text-3xl font-bold mb-6" style="color: var(--main-pink);">
+          DÀNH CHO NHỮNG NGƯỜI ĐANG Ở NGÃ BA CUỘC ĐỜI...
+        </h2>
+        <div id="editable-subjects-desc" class="text-lg text-gray-700 mb-12 leading-relaxed text-left">
+          <!-- nội dung sẽ cập nhật -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    function updateSubjects() {
+      const title = CKEDITOR.instances["subjects-editor"].getData();
+      const content = CKEDITOR.instances["editor-subjects-desc"].getData();
+
+      document.getElementById("subjects").innerHTML = title;
+      document.getElementById("editable-subjects-desc").innerHTML = content;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.replace("subjects-editor");
+        CKEDITOR.replace("editor-subjects-desc");
+      }
+    });
+  </script>
+
+
+  <!-- Editor: Giới thiệu Coach Moon -->
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “GIỚI THIỆU COACH MOON”</h2>
+
+    <label class="block font-semibold">Nội dung giới thiệu (dùng CKEditor):</label>
+    <textarea id="editor-about-desc" rows="12" class="w-full border rounded">
+    <p class="text-3xl font-serif"><strong>COACH MOON PHAM</strong></p>
+    <p class="text-xl font-serif">
+      <span class="inline-block w-20 border-t-2 border-[var(--white)]"></span>
+    </p>
+    <div class="text-balance">
+      <p>Một người đang sống thật – và đồng hành cùng những người phụ nữ <strong>đủ dũng cảm để sống rực rỡ từ bản
+          thể.</strong></p>
+      <p>Tôi không hoàn hảo. </p>
+      <p>Tôi vẫn đang trên hành trình. </p>
+      <p>Nhưng tôi đã <strong>đi qua nỗi mỏi mệt mà bạn đang mang.</strong></p>
+    </div>
+    <div class="text-balance">
+      <p><strong>Từng là nữ lãnh đạo cấp cao</strong> trong ngành Marketing hơn 20 năm, tôi làm việc tại các tập
+        đoàn lớn – cả Việt Nam và đa quốc gia. </p>
+      <p><strong>Thành công ngoài mặt. Kiệt sức bên trong.</strong></p>
+      <p>Tôi nhận ra có rất nhiều phụ nữ giống tôi:</p>
+      <p><strong>Giỏi giang. Độc lập. Nhưng hoang mang, cô đơn. Và ngày càng xa rời chính mình.</strong></p>
+    </div>
+    <div class="text-balance">
+      <p>Nếu bạn đang tìm một người <strong>không dạy bạn sống – mà cùng bạn tìm lại chính mình, </strong></p>
+      <p>Tôi ở đây, sẵn sàng đi cùng bạn.</p>
+    </div>
+
+    <p>With love 🤍</p>
+<div class="flex justify-between items-center mt-4 gap-4">
+  <img src="img/sign.png" class="w-[40%] max-w-[400px] h-auto" />
+  <img src="img/tagline.png" class="w-[40%] max-w-[400px] h-auto" />
+</div>
+</textarea>
+
+    <button onclick="updateAbout()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật giới thiệu</button>
+  </section>
+
+  <div id="output3-html">
+    <section id="about" class="bg-[var(--deep-pink)] text-[var(--white)] overflow-hidden mb-0">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-12 items-center">
+        <!-- Hình ảnh -->
+        <div class="md:col-span-5 flex items-center justify-center">
+          <img src="img/bbb.JPEG" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Phần mô tả -->
+        <div class="md:col-span-7">
+          <div id="editable-about-desc" class="font-sans leading-relaxed space-y-6 px-6 md:px-0 py-8 md:py-0 mb-0">
+            <h1 class="text-3xl font-serif"><strong>COACH MOON PHAM</strong></h1>
+            <div class="w-20 border-t-2 border-[var(--white)]"></div>
+
+            <div>
+              <h3>Một người đang sống thật – và đồng hành cùng những người phụ nữ <strong>đủ dũng cảm để sống rực rỡ từ
+                  bản thể.</strong></h3>
+              <h3>Tôi không hoàn hảo.</h3>
+              <h3>Tôi vẫn đang trên hành trình.</h3>
+              <h3>Nhưng tôi đã <strong>đi qua nỗi mỏi mệt mà bạn đang mang.</strong></h3>
+            </div>
+
+            <div>
+              <h3><strong>Từng là một nữ lãnh đạo cấp cao</strong> trong ngành Marketing hơn 20 năm, tôi làm việc tại
+                các
+                tập đoàn lớn – cả Việt Nam và đa quốc gia.</h3>
+              <h3><strong>Thành công ngoài mặt. Kiệt sức bên trong.</strong></h3>
+              <h3>Tôi nhận ra có rất nhiều phụ nữ giống tôi:</h3>
+              <h3><strong>Giỏi giang. Độc lập. Nhưng hoang mang, cô đơn. Và ngày càng xa rời chính mình.</strong></h3>
+            </div>
+
+            <div>
+              <h3>Nếu bạn đang tìm một người <strong>không dạy bạn sống – mà cùng bạn tìm lại chính mình,</strong></h3>
+              <h3>Tôi ở đây, sẵn sàng đi cùng bạn.</h3>
+              <h3>With love 🤍</h3>
+            </div>
+
+            <div class="flex flex-wrap justify-start items-center gap-4">
+              <img src="img/sign.png" class="w-[40%] max-w-[400px] h-auto" />
+              <img src="img/tagline.png" class="w-[40%] max-w-[300px] h-auto" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function updateAbout() {
+      const content = CKEDITOR.instances["editor-about-desc"].getData();
+      document.getElementById("editable-about-desc").innerHTML = content;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.replace("editor-about-desc");
+      }
+    });
+  </script>
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “CÁC DỊCH VỤ KHAI VẤN”</h2>
+
+    <label class="block font-semibold">Tiêu đề:</label>
+    <textarea id="editable-steps-title" rows="2" class="w-full p-2 border rounded">CÁC DỊCH VỤ KHAI VẤN</textarea>
+    <button onclick="updateSetps()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật phần “CÁC DỊCH VỤ
+      KHAI VẤN”</button>
+  </section>
+
+  <div id="output4-html">
+    <section id="dichvu" class="bg-[var(--white)]">
+      <div class="max-w-6xl mx-auto px-4">
+        <h1 id="steps-title" class="font-bold text-balance text-center mb-10 mt-10"
+          style="font-size: clamp(1.5rem, 4vw, 2.0rem); color: var(--main-pink);">
+          CÁC DỊCH VỤ KHAI VẤN
+        </h1>
+
+        <div class="relative">
+          <button id="prevBtnProducts"
+            class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 text-3xl flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+            < </button>
+
+              <div id="service-container" class="flex overflow-x-auto no-scrollbar space-x-6 scroll-smooth">
+                <!-- Service Item 1 -->
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/1.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/1.jpg" class="max-h-full object-contain" />
+                      </div>
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">Bản đồ cuộc đời</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/2.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/2.jpg" class="max-h-full object-contain" />
+                      </div>
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">La bàn sự nghiệp</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/3.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/3.jpg" class="max-h-full object-contain" />
+                      </div>
+
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">Hiểu con từ gốc</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/4.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/4.jpg" class="max-h-full object-contain" />
+                      </div>
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">Lãnh đạo từ bản thể</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/5.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/5.jpg" class="max-h-full object-contain" />
+                      </div>
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">Khám sức khỏe doanh nghiệp</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <a href="poster/6.jpg" target="_blank" rel="noopener noreferrer">
+                      <div
+                        class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                        <img src="img/banner dichvu/6.jpg" class="max-h-full object-contain" />
+                      </div>
+                    </a>
+                  </div>
+                  <div class="p-4 bg-[var(--white)]">
+                    <h3 class="font-bold">Tư vấn chuyên sâu theo giờ</h3>
+                    <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                    <div class="flex items-center text-[var(--yellow-500)]">
+                      ★★★★★ (5)
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-center items-center mt-5">
+                <button onclick="document.getElementById('register-service').scrollIntoView({ behavior: 'smooth' })"
+                  class="border border-[var(--main-pink)] px-8 py-2 rounded-xl text-2xl font-semibold text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition-all duration-300 shadow-lg hover:shadow-xl">
+                  ĐĂNG KÝ NGAY
+                </button>
+              </div>
+              <button id="nextBtnProducts"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 text-3xl flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+                >
+              </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="text-center mt-6">
+    <button onclick="openPopup()"
+      class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-full shadow transition">
+      + Thêm Dịch Vụ
+    </button>
+  </div>
+  <template id="service-template">
+    <div
+      class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+      <div class="relative">
+        <a class="preview-link" href="#" target="_blank" rel="noopener noreferrer">
+          <div
+            class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-white">
+            <img class="preview-img max-h-full object-contain" src="img/banner.jpg" />
+          </div>
+        </a>
+      </div>
+      <div class="p-4 bg-white">
+        <h4 class="preview-title font-bold text-lg sm:text-xl">Tên Dịch Vụ</h4>
+        <p class="text-sm sm:text-base text-gray-600">Coach Moon</p>
+        <div class="flex items-center text-yellow-500">
+          ★★★★★ (5)
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Popup Thêm Dịch Vụ -->
+  <div id="service-popup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full space-y-4">
+      <h3 class="text-xl font-bold text-center text-pink-600">Thêm Dịch Vụ Mới</h3>
+      <input id="popup-title" type="text" placeholder="Tên dịch vụ" class="w-full p-2 border rounded" />
+      <label class="block text-sm font-semibold">Ảnh (chọn sẵn):</label>
+      <select id="popup-img-select" class="w-full p-2 border rounded service-img">
+        <option value="img/banner dichvu/1.jpg">1.jpg</option>
+        <option value="img/banner dichvu/2.jpg">2.jpg</option>
+        <option value="img/banner dichvu/3.jpg">3.jpg</option>
+        <option value="img/banner dichvu/4.jpg">4.jpg</option>
+        <option value="img/banner dichvu/5.jpg">5.jpg</option>
+        <option value="img/banner dichvu/6.jpg">6.jpg</option>
+        <option value="img/banner dichvu/7.jpg">7.jpg</option>
+        <option value="img/banner dichvu/8.jpg">8.jpg</option>
+        <option value="img/banner dichvu/9.jpg">9.jpg</option>
+        <option value="img/banner dichvu/10.jpg">10.jpg</option>
+        <option value="img/banner dichvu/11.jpg">11.jpg</option>
+        <option value="img/banner dichvu/12.jpg">12.jpg</option>
+        <option value="img/banner dichvu/13.jpg">13.jpg</option>
+        <option value="img/banner dichvu/14.jpg">14.jpg</option>
+        <option value="img/banner dichvu/15.jpg">15.jpg</option>
+        <option value="img/banner dichvu/16.jpg">16.jpg</option>
+      </select>
+      <div class="w-full flex justify-center mt-2">
+        <img id="popup-img-preview" src="img/banner dichvu/1.jpg" class="h-32 object-contain rounded shadow" />
+      </div>
+      <input id="popup-link" type="text" placeholder="Link chi tiết (VD: https://...)"
+        class="w-full p-2 border rounded" />
+      <div class="flex justify-between">
+        <button onclick="closePopup()"
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Hủy</button>
+        <button onclick="saveService()" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateSetps() {
+      const content = CKEDITOR.instances["editable-steps-title"].getData();
+      document.getElementById("steps-title").innerHTML = content;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.replace("editable-steps-title");
+      }
+    });
+    
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("service-container");
+    const nextBtn = document.getElementById("nextBtnProducts");
+    const prevBtn = document.getElementById("prevBtnProducts");
+
+    const scrollAmount = container.offsetWidth * 0.6; // Scroll khoảng 60% chiều rộng khung nhìn
+
+    nextBtn.addEventListener("click", () => {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener("click", () => {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+  });
+
+  </script>
+
+
+  <!-- Form chỉnh sửa 3 Công Cụ Chuyên Sâu -->
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “TÌM HIỂU 3 CÔNG CỤ CHUYÊN SÂU”</h2>
+
+    <label class="block font-semibold">Tiêu đề:</label>
+    <textarea id="editable-tools-title-editor" rows="2"
+      class="w-full p-2 border rounded">TÌM HIỂU 3 CÔNG CỤ...</textarea>
+
+
+    <label class="block font-semibold">Nội dung mô tả (hỗ trợ định dạng HTML):</label>
+
+    <!-- Tách thành từng phần riêng biệt -->
+    <label class="block font-semibold">1. Sinh Trắc Học Vân Tay:</label>
+    <textarea id="editor-tools-desc-1" rows="6"
+      class="w-full border rounded">Sinh trắc vân tay là ngành khoa học nghiên cứu về mối liên hệ giữa cấu trúc bộ não, sự phân bổ các nơron thần kinh với vân tay của con người. Thông qua đó, có thể xác định những khả năng thiên bẩm của từng cá nhân.</textarea>
+
+    <label class="block font-semibold">Nhập đường dẫn hình ảnh cho công cụ 1:</label>
+    <input type="text" id="editor-tools-img-1" class="w-full p-2 border rounded mb-4" value="img/img_tools/1.jpg" />
+
+    <div class="mt-4">
+      <img id="tools-img-preview-1" src="img/img_tools/1.jpg" alt="Preview Image"
+        class="w-64 h-auto rounded shadow-md" />
+    </div>
+
+    <label class="block font-semibold mt-4">2. Công Cụ DISC:</label>
+    <textarea id="editor-tools-desc-2" rows="6"
+      class="w-full border rounded">DISC là mô hình phân tích hành vi, giúp đo lường và xác định mức độ của các đặc điểm tính cách thông qua 4 phong cách: Chi phối, Ảnh hưởng, Kiên định và Tận tâm.</textarea>
+
+    <label class="block font-semibold">Nhập đường dẫn hình ảnh cho công cụ 2:</label>
+    <input type="text" id="editor-tools-img-2" class="w-full p-2 border rounded mb-4" value="img/img_tools/2.jpg" />
+
+    <div class="mt-4">
+      <img id="tools-img-preview-2" src="img/img_tools/2.jpg" alt="Preview Image"
+        class="w-64 h-auto rounded shadow-md" />
+    </div>
+
+    <label class="block font-semibold mt-4">3. Công Cụ Motivators:</label>
+    <textarea id="editor-tools-desc-3" rows="6"
+      class="w-full border rounded">Motivators đo lường các yếu tố thúc đẩy hành vi của một cá nhân, tập trung vào 7 khía cạnh động lực chính: Thẩm mỹ, Kinh tế, Cá nhân, Quyền lực, Vị tha, Quy tắc và Lý thuyết.</textarea>
+
+    <label class="block font-semibold">Nhập đường dẫn hình ảnh cho công cụ 3:</label>
+    <input type="text" id="editor-tools-img-3" class="w-full p-2 border rounded mb-4" value="img/img_tools/3.jpg" />
+
+    <div class="mt-4">
+      <img id="tools-img-preview-3" src="img/img_tools/3.jpg" alt="Preview Image"
+        class="w-64 h-auto rounded shadow-md" />
+    </div>
+
+    <button onclick="updateToolsSection()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật nội dung công
+      cụ</button>
+  </section>
+
+  <!-- Phần hiển thị kết quả -->
+  <div id="output5-html">
+    <section class="py-20 bg-[var(--gray-50)]">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 id="editable-tools-title" class="text-3xl font-bold text-center text-[var(--main-pink)] mb-12">
+          TÌM HIỂU 3 CÔNG CỤ CHUYÊN SÂU
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+
+          <!-- Tool 1 -->
+          <div class="bg-[var(--white)] rounded-lg shadow-lg hover:shadow-xl transition duration-300 overflow-hidden">
+            <div class="h-56 bg-gray-100 flex items-center justify-center">
+              <img id="output-img-1" src="img/img_tools/1.jpg" alt="Sinh trắc học vân tay"
+                class="max-h-full max-w-full object-contain" />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2 text-[var(--text-purple)]">Sinh Trắc Học Vân Tay</h3>
+              <p id="output-desc-1" class="text-[var(--gray-700)]">
+                Sinh trắc vân tay là ngành khoa học nghiên cứu về mối liên hệ giữa cấu trúc bộ não,
+                sự phân bổ các nơron thần kinh với vân tay của con người. Thông qua đó, có thể xác định
+                những khả năng thiên bẩm của từng cá nhân.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tool 2 -->
+          <div class="bg-[var(--white)] rounded-lg shadow-lg hover:shadow-xl transition duration-300 overflow-hidden">
+            <div class="h-56 bg-gray-100 flex items-center justify-center">
+              <img id="output-img-2" src="img/img_tools/2.jpg" alt="Công cụ DISC"
+                class="max-h-full max-w-full object-contain" />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2 text-[var(--text-purple)]">Công Cụ DISC</h3>
+              <p id="output-desc-2" class="text-[var(--gray-700)]">
+                DISC là mô hình phân tích hành vi, giúp đo lường và xác định mức độ của các đặc điểm
+                tính cách thông qua 4 phong cách: Chi phối, Ảnh hưởng, Kiên định và Tận tâm.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tool 3 -->
+          <div class="bg-[var(--white)] rounded-lg shadow-lg hover:shadow-xl transition duration-300 overflow-hidden">
+            <div class="h-56 bg-gray-100 flex items-center justify-center">
+              <img id="output-img-3" src="img/img_tools/3.jpg" alt="Công cụ Motivators"
+                class="max-h-full max-w-full object-contain" />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2 text-[var(--text-purple)]">Công Cụ Motivators</h3>
+              <p id="output-desc-3" class="text-[var(--gray-700)]">
+                Motivators đo lường các yếu tố thúc đẩy hành vi của một cá nhân, tập trung vào 7 khía
+                cạnh động lực chính: Thẩm mỹ, Kinh tế, Cá nhân, Quyền lực, Vị tha, Quy tắc và Lý thuyết.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function updateToolsSection() {
+      // Lấy thông tin từ các phần chỉnh sửa
+      const title = CKEDITOR.instances["editable-tools-title-editor"].getData();
+      const content1 = CKEDITOR.instances["editor-tools-desc-1"].getData();
+      const content2 = CKEDITOR.instances["editor-tools-desc-2"].getData();
+      const content3 = CKEDITOR.instances["editor-tools-desc-3"].getData();
+      const imgSrc1 = document.getElementById("editor-tools-img-1").value;
+      const imgSrc2 = document.getElementById("editor-tools-img-2").value;
+      const imgSrc3 = document.getElementById("editor-tools-img-3").value;
+
+      // Cập nhật phần hiển thị kết quả
+      document.getElementById("editable-tools-title").innerHTML = title;
+
+      document.getElementById("output-desc-1").innerHTML = content1;
+      document.getElementById("output-desc-2").innerHTML = content2;
+      document.getElementById("output-desc-3").innerHTML = content3;
+
+      document.getElementById("output-img-1").src = imgSrc1;
+      document.getElementById("output-img-2").src = imgSrc2;
+      document.getElementById("output-img-3").src = imgSrc3;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      CKEDITOR.replace("editable-tools-title-editor");
+      CKEDITOR.replace("editor-tools-desc-1");
+      CKEDITOR.replace("editor-tools-desc-2");
+      CKEDITOR.replace("editor-tools-desc-3");
+
+      const imgSelect1 = document.getElementById("editor-tools-img-1");
+      const imgPreview1 = document.getElementById("tools-img-preview-1");
+      imgSelect1.addEventListener("change", function () {
+        imgPreview1.src = imgSelect1.value;
+      });
+
+      const imgSelect2 = document.getElementById("editor-tools-img-2");
+      const imgPreview2 = document.getElementById("tools-img-preview-2");
+      imgSelect2.addEventListener("change", function () {
+        imgPreview2.src = imgSelect2.value;
+      });
+
+      const imgSelect3 = document.getElementById("editor-tools-img-3");
+      const imgPreview3 = document.getElementById("tools-img-preview-3");
+      imgSelect3.addEventListener("change", function () {
+        imgPreview3.src = imgSelect3.value;
+      });
+    });
+
+  </script>
+
+  <section class="bg-gray-100 px-4 py-8 border-t border-b">
+    <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “QUY TRÌNH ĐĂNG KÝ DỊCH VỤ KHAI VẤN”</h2>
+
+    <label class="block font-semibold">Tiêu đề:</label>
+    <textarea id="editable-QT-title-editor" rows="2"
+      class="w-full p-2 border rounded">QUY TRÌNH ĐĂNG KÝ DỊCH VỤ KHAI VẤN</textarea>
+
+    <label class="block font-semibold">Chỉnh sửa toàn bộ nội dung quy trình đăng ký dịch vụ:</label>
+    <textarea id="editor-all-steps" class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" rows="12">
+    <h3>Bước 1: Đăng ký</h3>
+    <p>Điền đầy đủ thông tin vào form bên phải.</p>
+
+    <h3>Bước 2: Thanh toán</h3>
+    <p>Chuyển khoản phí dịch vụ, chụp màn hình xác nhận gửi qua Zalo Coach MoonPham và nhận email xác nhận.</p>
+
+    <h3>Bước 3: Nhận link test trong vòng 24h</h3>
+    <p>Dành 30 phút, trong không gian yên tĩnh để làm bài test.</p>
+
+    <h3>Bước 4: Nhận liền kết quả bài test</h3>
+    <p>Gửi kết quả về cho Coach qua Zalo.</p>
+
+    <h3>Bước 5: Đặt hẹn & tham gia</h3>
+    <p>Nếu thay đổi, vui lòng báo trước Coach ít nhất 24h.</p>
+
+    <h3>Bước 6: Đồng hành cá nhân hóa</h3>
+    <p>Coach Moon tiếp tục follow-up 1:1 trong suốt hành trình.</p>
+  </textarea>
+
+    <button onclick="updateAllSteps()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật toàn bộ quy
+      trình</button>
+  </section>
+
+  <!-- Phần hiển thị -->
+  <div id="output6-html">
+    <section id="register-service" class="py-10 bg-gradient-to-br from-[var(--white)] via-pink-50 to-[var(--white)]">
+      <div class="max-w-7xl mx-auto px-6">
+
+        <h1 id="QT-title" class="text-balance font-bold text-center text-[var(--pink-600)] mb-10"
+          style="color: var(--main-pink); font-size: clamp(1.5rem, 4vw, 1.875rem);">
+          QUY TRÌNH ĐĂNG KÝ DỊCH VỤ KHAI VẤN
+        </h1>
+
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+          <div class="space-y-6 text-[var(--gray-800)] text-[17px]">
+            <div id="editable-process-content" class="space-y-4">
+              <h3><strong>Bước 1: Đăng ký</strong><br>Điền đầy đủ thông tin vào form bên phải.</h3>
+              <h3><strong>Bước 2: Thanh toán</strong><br>Chuyển khoản phí dịch vụ, chụp màn hình xác nhận gửi qua Zalo
+                Coach MoonPham và nhận email xác nhận.<br></h3>
+              <h3><strong>Bước 3: Nhận link test trong vòng 24h</strong><br>Dành 30 phút, trong không gian yên tĩnh để
+                làm
+                bài test.</h3>
+              <h3 class=" text-[var(--gray-600)] italic">Lưu ý: Tin tưởng và làm bài test như hướng dẫn, không phân
+                tâm,
+                không lo đúng sai.</h3>
+              <h3><strong>Bước 4: Nhận liền kết quả bài test</strong><br>Gửi kết quả về cho Coach qua Zalo.</h3>
+              <h3><strong>Bước 5: Đặt hẹn & tham gia</strong><br>Nếu thay đổi, vui lòng báo trước Coach ít nhất 24h.
+              </h3>
+              <h3><strong>Bước 6: Đồng hành cá nhân hóa</strong><br>Coach Moon tiếp tục follow-up 1:1 trong suốt hành
+                trình.</h3>
+              <h3 class="text-[var(--pink-700)] font-semibold">🌟 Hãy tin rằng bạn chính là ngọn hải đăng của chính
+                mình!
+              </h3>
+            </div>
+          </div>
+
+          <form id="contactForm"
+            class="bg-gradient-to-br from-[var(--purple-100)] via-[var(--form-gradient-from)] to-[var(--white)] p-8 rounded-lg shadow-lg space-y-6">
+
+            <h3 class="text-2xl font-bold text-[var(--gray-800)] mb-2 text-center">ĐĂNG KÝ DỊCH VỤ</h3>
+
+            <div class="relative">
+              <input name="name" id="name" type="text" placeholder="Họ và tên" required
+                class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" />
+            </div>
+
+            <div class="relative">
+              <input name="email" id="email" type="email" placeholder="Email" required
+                class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" />
+            </div>
+
+            <div class="relative">
+              <input name="phone" id="phone" type="tel" placeholder="Số điện thoại" required
+                class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" />
+            </div>
+
+            <div class="relative">
+              <input name="your-job" id="your-job" placeholder="Công việc hiện tại" required
+                class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" />
+            </div>
+
+            <div class="relative">
+              <input name="your-product" id="your-product" placeholder="Dịch vụ bạn quan tâm" required
+                class="w-full px-4 py-3 rounded border border-[var(--gray-300)]" />
+            </div>
+
+            <button type="submit"
+              class="text-xl font-bold w-full bg-gradient-to-r from-[var(--pink-600)] to-[var(--pink-500)] text-[var(--white)] py-3 rounded  hover:from-[var(--pink-700)] hover:to-[var(--pink-600)] transition duration-300">
+              ĐĂNG KÝ
+            </button>
+            <div id="loadingSpinner" class="hidden flex justify-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-t-4 border-[var(--purple-600)] border-opacity-30">
+              </div>
+            </div>
+            <div id="toast"
+              class="fixed inset-0 flex items-center justify-center bg-[var(--black)] bg-opacity-50 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+              <div class="bg-[var(--white)] px-8 py-6 rounded-xl shadow-2xl text-center max-w-sm w-full">
+                <h3 class="text-lg font-semibold text-[var(--pink-600)] mb-2">Cảm ơn bạn đã đăng ký dịch vụ!</h3>
+                <p class="text-[var(--gray-700)]">Vui lòng kiểm tra email để xác nhận thông tin.</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+  </div>
+
+  <script>
+    // Cập nhật toàn bộ nội dung quy trình
+    function updateAllSteps() {
+      const title = CKEDITOR.instances["editable-QT-title-editor"].getData();
+      const updatedContent = CKEDITOR.instances["editor-all-steps"].getData();
+      document.getElementById("editable-process-content").innerHTML = updatedContent;
+      document.getElementById("QT-title").innerHTML = title;
+    }
+
+    // Cập nhật khi form chỉnh sửa được gửi
+    function updateSteps1() {
+      const title = document.getElementById("editor-steps-title").value;
+      const color = document.getElementById("editor-steps-title-color").value;
+
+      // Cập nhật phần hiển thị tiêu đề và màu
+      document.getElementById("editable-steps-title").innerText = title;
+      document.getElementById("editable-steps-title").style.color = color;
+    }
+
+    // Khởi tạo CKEditor cho các bước trong quy trình
+    window.addEventListener("DOMContentLoaded", function () {
+      CKEDITOR.replace('editable-QT-title-editor');
+      CKEDITOR.replace('editor-all-steps'); // CKEditor cho toàn bộ nội dung quy trình
+    });
+  </script>
+
+  <div id="output8-html">
+    <section class="bg-gray-100 px-4 py-8 border-t border-b">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “LỘ TRÌNH 6 BƯỚC CHÚNG TA SẼ ĐỒNG HÀNH CÙNG NHAU”
+      </h2>
+
+      <label class="block font-semibold">Tiêu đề:</label>
+      <textarea id="editable-steps-title-editor" rows="2"
+        class="w-full p-2 border rounded">LỘ TRÌNH 6 BƯỚC CHÚNG TA SẼ ĐỒNG HÀNH CÙNG NHAU</textarea>
+
+      <button onclick="updateStepsLT()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật toàn bộ lộ
+        trình</button>
+    </section>
+
+    <div id="output7-html">
+      <section id="" class="py-10 bg-[var(--white)]">
+        <div class="max-w-6xl mx-auto px-4">
+          <h3 id="editable-steps-title-LT" class="text-balance font-bold text-center mb-10"
+            style="color: var(--main-pink); font-size: clamp(1.5rem, 4vw, 2.25rem);">
+            LỘ TRÌNH 6 BƯỚC CHÚNG TA SẼ ĐỒNG HÀNH CÙNG NHAU
+          </h3>
+          <div class="relative">
+            <button id="prevBtnSteps"
+              class="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 text-4xl flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+              &lt;
+            </button>
+
+            <div id="sliderSteps" class="flex overflow-x-auto no-scrollbar space-x-8 scroll-smooth">
+              <!-- Step 1 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step1.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step2.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step3.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step4.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 5 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step5.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 6 -->
+              <div
+                class="min-w-[95%] sm:min-w-[50%] md:min-w-[55%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <div
+                    class="w-full h-[300px] sm:h-[300px] md:h-[350px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                    <img src="img/6steps/step6.png" class="max-h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button id="nextBtnSteps"
+              class="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 text-4xl flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+              &gt;
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Cập nhật toàn bộ nội dung của lộ trình
+      function updateStepsLT() {
+        const title = CKEDITOR.instances["editable-steps-title-editor"].getData();
+        document.getElementById("editable-steps-title-LT").innerHTML = title;
+
+      }
+      window.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('editable-steps-title-editor');
+      });
+    </script>
+    <section class="bg-gray-100 px-4 py-8 border-t border-b">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “MY STORY: SỐNG RỰC RỠ TỪ BẢN THỂ”</h2>
+
+      <label class="block font-semibold">Tiêu đề:</label>
+      <textarea id="MY-STORY-editable-steps-title-editor" rows="2"
+        class="w-full p-2 border rounded">MY STORY: SỐNG RỰC RỠ</textarea>
+
+
+      <button onclick="updateSteps1()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">Cập nhật toàn bộ lộ
+        trình</button>
+    </section>
+
+    <div id="output9-html">
+      <section class="py-20 bg-[var(--white)]">
+        <div class="max-w-6xl mx-auto px-4">
+        <div id="MY STORY-editable-steps-title" class="font-bold text-center text-[var(--main-pink)] mb-5"
+            style="font-size: clamp(1.5rem, 4vw, 1.875rem);">
+            <div>
+              <h2>MY STORY:</h2>
+              <h2>SỐNG RỰC RỠ TỪ BẢN THỂ</h2>
+            </div>
+        </div>
+
+        </div>
+        <div class="flex justify-center mb-6">
+          <iframe src="https://drive.google.com/file/d/1Hownoi05rPO6K_mSiS9c3CKJZPejHJUk/preview"
+            class="w-full max-w-[400px] md:max-w-[850px] aspect-video" allow="autoplay" allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="text-center mt-8">
+          <a href="#ebook-register"
+            class="border border-[var(--main-pink)] px-8 py-2 rounded-2xl text-2xl font-semibold text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition-all duration-300 shadow-lg hover:shadow-xl">
+            NHẬN EBOOK
+          </a>
+        </div>
+
+        <div class="relative py-6">
+          <button id="prevBtn"
+            class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+            < </button>
+
+              <div id="slider" class="flex overflow-x-auto no-scrollbar space-x-6 scroll-smooth">
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/1.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/2.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/3.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/4.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/5.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/6.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/7.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/8.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/9.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/10.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/11.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/12.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/13.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/14.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/15.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/18.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="min-w-[85%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
+                  <div class="relative">
+                    <div
+                      class="w-full h-[200px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="img/coach_header_imgs/19.jpg" class="max-h-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <button id="nextBtn"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full shadow-lg z-10 hover:bg-[var(--highlight-pink)] transition duration-300">
+                >
+              </button>
+        </div>
+    </div>
+    </section>
+  </div>
+
+
+  <div id="output10-html">
+    <script>
+      // Cập nhật toàn bộ nội dung của lộ trình
+      function updateSteps1() {
+        const title = CKEDITOR.instances["MY-STORY-editable-steps-title-editor"].getData();
+
+        // Cập nhật phần hiển thị
+        const editableTitle = document.getElementById("MY STORY-editable-steps-title");
+        editableTitle.innerHTML = title;
+      }
+      window.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('MY-STORY-editable-steps-title-editor');
+      });
+    </script>
+
+
+
+    <script>
+      // Cập nhật toàn bộ nội dung của lộ trình
+      function updateSteps() {
+        const title = document.getElementById("feedback-title").value;
+        const color = document.getElementById("feedback-title-color").value;
+
+        // Cập nhật phần hiển thị
+        document.getElementById("edited-feedback").innerText = title;
+        document.getElementById("edited-feedback").style.color = color;
+
+      }
+    </script>
+
+    <section class="bg-gray-100 px-4 py-8 border-b">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “CẢM NHẬN CỦA KHÁCH HÀNG”</h2>
+
+      <label class="block font-semibold">Tiêu đề chính:</label>
+      <textarea id="feedback-title-editor" rows="2" class="w-full p-2 border rounded">CẢM NHẬN CỦA KHÁCH HÀNG</textarea>
+
+      <button onclick="updateFeedbackContent()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">
+        Cập nhật nội dung
+      </button>
+    </section>
+
+
+    <div id="feedback-output">
+      <section id="customers" class="py-10 bg-[var(--pink-300)]">
+        <div class="max-w-7xl mx-auto px-6">
+          <h2 id="feedback-title-render" class="font-bold text-center mb-12 text-balance"
+            style="color: var(--main-pink); font-size: clamp(1.5rem, 4vw, 1.875rem);">
+            CẢM NHẬN CỦA KHÁCH
+            HÀNG SAU KHI
+            ĐƯỢC KHAI VẤN
+          </h2>
+    
+    
+          <div class="flex overflow-x-auto space-x-4 snap-x snap-mandatory scroll-smooth px-1 -mx-1">
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/VivianPham.png" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">CHỊ VIVIAN PHAM</h3>
+                <h4 class="font-bold mb-3">Giám đốc Marketing</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    Làm việc với Coach Moon khiến mình nhận ra rằng: thành công không nhất thiết phải...
+                  </span>
+                  <span class="full-text hidden">
+                    Làm việc với Coach Moon khiến mình nhận ra rằng: thành công không nhất thiết phải đánh đổi hạnh phúc.
+                    Thông qua hành trình “Thấu hiểu bản thân”, mình học được cách lắng nghe chính mình, hiểu rõ hơn về giá
+                    trị
+                    cá nhân và điều gì thực sự quan trọng. Chị không chỉ coach, mà còn truyền cảm hứng để mình thay đổi từ
+                    bên
+                    trong.
+                    Nếu bạn là một người phụ nữ đang trên hành trình thành công, nhưng đôi khi thấy “mình đang đánh rơi
+                    chính
+                    mình” – hãy cho bản thân cơ hội gặp chị Moon. Nó có thể là bước ngoặt rất quan trọng trong cuộc đời bạn.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="mt-1 text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+              <button onclick="openVideoModal('https://drive.google.com/file/d/1MXXre2zdEe4S_eL74ZJVuCAUjt-D4Hed/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+            </div>
+    
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/LeeParis.jpg" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">ANH LEE PARIS</h3>
+                <h4 class="font-bold mb-3">CEO JL Immigration, Australia</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    Chủng vân tay của mình thuộc dạng hiếm, nên không phải ai cũng có thể giải mã chính xác...
+                  </span>
+                  <span class="full-text hidden">
+                    Chủng vân tay của mình thuộc dạng hiếm, nên không phải ai cũng có thể giải mã chính xác. Vậy mà chị phân
+                    tích chính xác hơn 95% điểm mạnh, điểm yếu, tiềm năng, và cả con đường phía trước. Nhưng điều khiến mình
+                    không bao giờ quên là khi chị mỉm cười và nói:
+                    “Em cứ yên tâm, dấu vân tay của em cho thấy sau này em có thể trở thành CEO, thậm chí là Chủ tịch HĐQT…”
+                    Lúc đó, mình nghe mà nửa tin nửa ngờ. Nhưng hôm nay, sau hơn một thập kỷ, mình đang sống đúng với điều
+                    chị từng thấy: mình là CEO của chính công ty mình thành lập tại Úc.
+                    Và đến tận bây giờ, mình vẫn luôn biết ơn chị – như một người đã khai mở tiềm năng và thắp sáng lại niềm
+                    tin nơi mình.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="mt-1 text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+              <button onclick="openVideoModal('https://drive.google.com/file/d/1R5YcQZs-BW14TXA5U194-889X1pLc0aM/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+            </div>
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/NgocThuy.jpg" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">CHỊ NGỌC THỦY</h3>
+                <h4 class="font-bold mb-3">Phụ huynh học sinh du học Mỹ</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    Là một người mẹ, mình luôn trăn trở rất nhiều về việc định hướng tương lai phù hợp cho con...
+                  </span>
+                  <span class="full-text hidden">
+                    Là một người mẹ, mình luôn trăn trở rất nhiều về việc định hướng tương lai phù hợp cho con, nhất là khi
+                    mỗi bạn đều có những điểm mạnh và tài năng riêng, không đi theo “lối mòn” thông thường.
+                    Mình đặc biệt ấn tượng khi chị giúp mình nhận ra rằng: việc chọn ngành không chỉ dựa trên điểm số hay xu
+                    hướng, mà cần thực sự phù hợp với bản chất, năng lực và “sợi chỉ đỏ” trong con người mỗi bạn.
+                    Nhờ chị Moon, cả gia đình mình cảm thấy vững vàng và rõ ràng hơn rất nhiều trong hành trình phía trước.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="mt-1 text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+              <button onclick="openVideoModal('https://drive.google.com/file/d/1IBbLqZHx61GH6_uYnKBYxnyfRvQTX_BP/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+            </div>
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/NguyenThuyHang.jpg" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">CHỊ NGUYỄN THÚY HẰNG</h3>
+                <h4 class="font-bold mb-3">Môi giới chứng khoán</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    Mình đã từng làm rất nhiều bài test để hiểu mình – từ MBTI, DISC, cho tới cả sinh trắc học...
+                  </span>
+                  <span class="full-text hidden">
+                    Mình đã từng làm rất nhiều bài test để hiểu mình – từ MBTI, DISC, cho tới cả sinh trắc học… nhưng mọi
+                    thứ cứ lửng lơ, không rõ ràng, và thật sự... vô nghĩa.
+                    Cho tới khi gặp chị Minh Nguyệt - chị giống như một tấm gương soi nội tâm – giúp mình hiểu rõ TÍNH CÁCH
+                    của chính mình, biết được ĐỘNG LỰC cốt lõi đang điều khiển hành vi và lựa chọn sự nghiệp.
+                    Mình cảm thấy lần đầu tiên mình được kết nối thật sự với chính mình – không còn mơ hồ hay tự nghi ngờ
+                    nữa.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="mt-1 text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+              <button onclick="openVideoModal('https://drive.google.com/file/d/1PnQ45fQF_Pw2GyxM5HBqrBwEs7rC2tG6/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+            </div>
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/DangQuy.jpg" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">CHỊ ĐẶNG QUÝ</h3>
+                <h4 class="font-bold mb-3">Sales bất động sản</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    Lần thứ hai gặp mặt chị Nguyệt với vai trò là người khai vấn (coach), chị đã “đả thông”...
+                  </span>
+                  <span class="full-text hidden">
+                    Lần thứ hai gặp mặt chị Nguyệt với vai trò là người khai vấn (coach), chị đã “đả thông” một số vấn đề
+                    hoặc một số khái niệm mình hiểu chưa đúng lắm. Nhờ chị mà mình sẽ biết phải làm gì để kích hoạt động lực
+                    bên trong của mình cũng như cải thiện tính cách mình cần cư xử với môi trường và con người xung quanh.
+                    Buổi coaching thật sự rất tận tâm, chu đáo, rất có ích dành cho những ai đang hoang mang, lo lắng, hoặc
+                    bơ vơ giữa cuộc sống bộn bề lo toan này thì hãy thử trải nghiệm tham gia bài test và cùng coaching với
+                    chị Nguyệt.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="mt-1 text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+    
+              <button onclick="openVideoModal('https://drive.google.com/file/d/15vLivRib1FdeBf6sKIpVRKc-FpHeCWni/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+    
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+            </div>
+    
+            <div
+              class="bg-[var(--white)] p-6 rounded-xl shadow hover:shadow-md transition flex flex-col min-h-[100px] flex-shrink-0 w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] snap-start">
+    
+              <div class="flex flex-col items-center text-center">
+                <img src="img/avatar_customers/ThanhNhan.jpg" alt="Avatar khách hàng"
+                  class="w-24 h-24 rounded-full mb-4 object-cover shadow">
+                <h3 class="font-bold">CHỊ NGUYỄN THANH NHÀN</h3>
+                <h4 class="font-bold mb-3">Giáo viên</h4>
+                <div class="mb-2 text-[var(--yellow-400)]">⭐️⭐️⭐️⭐️⭐️</div>
+                <p class="text-[var(--gray-700)] italic">
+                  <span class="short-text block">
+                    10 năm trước dạy con cô ấy
+                    10 năm sau xách giỏ đi học cô ấy và nhận lại được thật nhiều...
+                  </span>
+                  <span class="full-text hidden">
+                    10 năm trước dạy con cô ấy
+                    10 năm sau xách giỏ đi học cô ấy và nhận lại được thật nhiều giá trị. Cô ấy 10 điểm, từng ấy năm trôi
+                    qua, cô ấy vẫn trẻ trung, năng lượng và xuất sắc trong mọi công việc cô ấy làm. Cô ấy am hiểu vô cùng
+                    sâu sắc trong rất nhiều lĩnh vực.
+                    Em cảm ơn chị Minh Nguyệt vì buổi Coach hơn cả tuyệt vời! Thương chúc chị nhiều sức khỏe, nhiều năng
+                    lượng để mang đến những giá trị tốt đẹp đến với khách hàng trên hành trình Business Coach.
+                  </span>
+                </p>
+              </div>
+              <button onclick="toggleText(this)" class="text-sm text-[var(--blue-500)] hover:underline self-center">Đọc
+                thêm</button>
+              <!-- Nút -->
+              <button onclick="openVideoModal('https://drive.google.com/file/d/1fL567DNn_hDqSq1mdNnL02GeL-RI478o/preview')"
+                class="text-base font-bold mt-1 px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--main-pink)] rounded hover:bg-[var(--hover-pink)] transition duration-200">
+                Xem cảm nhận
+              </button>
+    
+              <!-- Modal Video -->
+              <div id="videoModal" class="video-modal">
+                <div class="close-btn" onclick="closeVideoModal()">✖</div>
+                <iframe id="modalIframe" allowfullscreen allow="fullscreen"></iframe>
+              </div>
+    
+              <style>
+                .video-modal {
+                  display: none;
+                  position: fixed;
+                  z-index: 9999;
+                  top: 0;
+                  left: 0;
+                  width: 100vw;
+                  height: 100vh;
+                  background: rgba(0, 0, 0, 0.8);
+                  justify-content: center;
+                  align-items: center;
+                }
+    
+                .video-modal iframe {
+                  width: 80vw;
+                  height: 45vw;
+                  max-width: 960px;
+                  max-height: 540px;
+                  border: none;
+                  border-radius: 10px;
+                }
+    
+                .video-modal .close-btn {
+                  position: absolute;
+                  top: 20px;
+                  right: 30px;
+                  font-size: 30px;
+                  color: [var(--white)];
+                  cursor: pointer;
+                }
+              </style>
+    
+    
+            </div>
+          </div>
+      </section>
+
+    </div>
+
+    <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace("feedback-title-editor")
+        CKEDITOR.replace("feedback-editor");
+      });
+
+      function updateFeedbackContent() {
+        // Lấy tiêu đề và màu tiêu đề
+        const title = CKEDITOR.instances["feedback-title-editor"].getData();
+
+        // Cập nhật tiêu đề
+        const titleRender = document.getElementById("feedback-title-render");
+        titleRender.innerHTML = title;
+
+        // Cập nhật nội dung feedback
+        const contentRender = document.getElementById("feedback-content-render");
+        contentRender.innerHTML = contentHTML;
+      }
+    </script>
+
+    <section class="bg-gray-100 px-4 py-8 border-b space-y-6">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần "CÂU HỎI THƯỜNG GẶP"</h2>
+
+      <!-- Tiêu đề chính -->
+      <label class="block font-semibold mb-1">Tiêu đề chính:</label>
+      <textarea id="faq-main-title-editor" class="w-full p-2 border rounded" rows="2">CÂU HỎI THƯỜNG GẶP</textarea>
+
+      <hr class="my-6" />
+
+      <!-- Tiêu đề phụ 1 -->
+      <label class="block font-semibold mb-1">Tiêu đề phụ 1:</label>
+      <textarea id="faq-sub-title-1-editor" class="w-full p-2 border rounded"
+        rows="2">VỀ QUY TRÌNH & HIỆU QUẢ COACHING</textarea>
+
+      <!-- Tiêu đề phụ 2 -->
+      <label class="block font-semibold mb-1">Tiêu đề phụ 2:</label>
+      <textarea id="faq-sub-title-2-editor" class="w-full p-2 border rounded" rows="2">VỀ GIÁ TRỊ & CAM KẾT</textarea>
+
+      <!-- Tiêu đề phụ 3 -->
+      <label class="block font-semibold mb-1">Tiêu đề phụ 3:</label>
+      <textarea id="faq-sub-title-3-editor" class="w-full p-2 border rounded"
+        rows="2">VỀ BÀI TEST & TÍNH CÁ NHÂN HÓA</textarea>
+
+      <!-- Tiêu đề phụ 4 -->
+      <label class="block font-semibold mb-1">Tiêu đề phụ 4:</label>
+      <textarea id="faq-sub-title-4-editor" class="w-full p-2 border rounded"
+        rows="2">VỀ GÓI “HIỂU CON TỪ GỐC”</textarea>
+
+      <!-- Tiêu đề phụ 5 -->
+      <label class="block font-semibold mb-1">Tiêu đề phụ 5:</label>
+      <textarea id="faq-sub-title-5-editor" class="w-full p-2 border rounded"
+        rows="2">VỀ CHÍNH SÁCH HOÀN TIỀN</textarea>
+
+      <button onclick="updateFAQTitles()" class="px-4 py-2 bg-pink-600 text-white rounded mt-6">
+        Cập nhật tiêu đề FAQ
+      </button>
+    </section>
+
+
+    <div id="faq-output">
+      <div id="faq-content-render" class="space-y-8 text-[var(--gray-800)] text-lg">
+       
+        <section id="faq" class="py-10 bg-[var(--white)]">
+          <div class="max-w-4xl mx-auto px-6">
+            <h1 id="faq-main-title-render" class="font-bold text-center mb-3" style="color: var(--main-pink); font-size: clamp(1.5rem, 4vw, 1.875rem);">
+              CÂU HỎI THƯỜNG GẶP (FAQ)
+            </h1>
+      
+            <h2 class="text-2xl font-bold mb-2">VỀ QUY TRÌNH & HIỆU QUẢ COACHING</h2>
+      
+            <div class="text-[var(--gray-800)] text-lg">
+              <!-- Nhóm 1 -->
+              <div>
+                <div class="flex items-center">
+                  <p id="faq-sub-title-render-1" class="text-xl mb-1">1. Coaching là gì? Tôi chưa từng trải nghiệm – liệu có phù hợp ?<span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance">
+                  Coaching không phải tư vấn hay trị liệu. Đây là một hành trình giúp bạn nhìn lại chính mình, kết nối sâu với
+                  bản thể, từ đó đưa ra những lựa chọn phù hợp với giá trị sống. Hơn 80% khách hàng của Coach Moon là người
+                  lần đầu
+                  trải nghiệm coaching – và họ đều chia sẻ rằng “giá như mình được làm điều này sớm hơn”.
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">2. Liệu chỉ 2 buổi có đủ để tạo ra sự khác biệt lớn ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Đủ để bạn "nhìn lại – nhìn sâu – và nhìn rõ". Hai buổi coaching không đơn thuần là trò chuyện,
+                  mà là một quy trình tích hợp công cụ khoa học và dẫn dắt chuyên sâu. Nhiều khách hàng đã ra quyết định lớn
+                  cho sự nghiệp, hôn nhân hoặc phong cách sống chỉ sau 2 buổi làm việc này.
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">3. Tôi đang rất bận, liệu có thể sắp xếp linh hoạt thời gian không ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Có. Bạn chỉ cần 90 phút mỗi buổi, linh hoạt vào buổi tối hoặc cuối tuần.
+                  Toàn bộ tài liệu sẽ được gửi đầy đủ để bạn theo dõi và áp dụng dễ dàng,
+                  không tạo thêm gánh nặng thời gian.
+                </p>
+              </div>
+      
+              <!-- Nhóm 2 -->
+              <h2 id="faq-sub-title-render-2" class="text-2xl font-bold mb-2 mt-3">VỀ GIÁ TRỊ & CAM KẾT</h2>
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">4. Giá gói khá cao – có đáng để đầu tư không ?<span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Gói không chỉ là vài bài test – mà là bước chuyển sâu sắc để bạn tái kết nối với chính mình
+                  và làm rõ hướng đi phù hợp. Chi phí một lần này có thể giúp bạn tiết kiệm nhiều năm mù mờ hoặc sai hướng.
+                  Đây là đầu tư cho bản thân, chứ không phải chi tiêu.
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">5. Nếu tôi không hài lòng thì sao ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Coach Moon cam kết hoàn 50% nếu sau buổi đầu tiên bạn không cảm thấy phù hợp.
+                  Điều quan trọng là sự tin tưởng và phù hợp từ cả hai phía.
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">6. Có hỗ trợ trả góp hoặc ưu đãi không ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Hiện đang có ưu đãi dành cho 100 khách hàng đầu tiên.
+                  Bạn cũng có thể chia làm 2 đợt thanh toán với các gói từ 8.800.000 VNĐ trở lên.
+                </p>
+              </div>
+      
+      
+              <!-- Nhóm 3 -->
+              <h2 id="faq-sub-title-render-3" class="text-2xl font-bold mb-2 mt-3">VỀ BÀI TEST & TÍNH CÁ NHÂN HÓA</h2>
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">7. Tôi từng làm DISC hoặc Sinh trắc – lần này có gì khác biệt ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Khác biệt nằm ở cách giải mã và kết nối thông tin.
+                  Coach Moon không chỉ “đọc kết quả”, mà giúp bạn xâu chuỗi bản thể – giá trị sống – sứ mệnh – hành động thực
+                  tế.
+                  Phương pháp này đã giúp hàng trăm phụ nữ chuyển hóa nhận thức và năng lượng sống.
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">8. Tôi nên chọn 2 bài test hay 3 bài ?<span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  2 bài: Phù hợp nếu bạn muốn ra quyết định nhanh, đang cần định hướng nghề nghiệp cụ thể
+                  3 bài: Dành cho người muốn hiểu sâu bản thân, khám phá ikigai và thiết kế lại toàn bộ cuộc đời
+                </p>
+              </div>
+      
+              <div>
+                <div class="flex items-center">
+                  <p class="text-xl mb-1">9. Kết quả test có đáng tin không ? <span
+                      class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                      thêm</span></p>
+                </div>
+                <p class="faq-answer hidden text-balance ">
+                  Các bài đánh giá (DISC, Motivators, Sinh trắc học) đều được sử dụng rộng rãi trong môi trường doanh nghiệp
+                  và giáo dục.
+                  Coach Moon đã áp dụng trên hàng ngàn khách hàng trong 10+ năm.
+                  Tuy nhiên, điều tạo ra giá trị khác biệt là cách giải nghĩa và ứng dụng đúng theo từng cá nhân.
+                </p>
+              </div>
+            </div>
+      
+            <!-- Nhóm 4 -->
+            <h2 id="faq-sub-title-render-4" class="text-2xl font-bold mb-2 mt-3">VỀ GÓI “HIỂU CON TỪ GỐC”</h2>
+            <div>
+              <div class="flex items-center">
+                <p class="text-xl mb-1">10. Con tôi đang tuổi dậy thì, nổi loạn, liệu có phù hợp không ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance ">
+                Giai đoạn dậy thì chính là thời điểm vàng để hiểu con đúng và xây dựng kết nối lâu dài.
+                Chương trình này không chỉ giải mã con,
+                mà còn giúp phụ huynh hiểu vai trò của mình – đồng hành mà không kiểm soát.
+              </p>
+            </div>
+      
+            <div>
+              <div class="flex items-center">
+                <p class="text-xl mb-1">11. Mẹ làm test thay con có chính xác không ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance ">
+                Với trẻ nhỏ, mẹ có thể làm bài quan sát. Tuy nhiên, với lứa tuổi 13–18,
+                nên để con trực tiếp làm bài DISC hoặc Motivators để đảm bảo kết quả khách quan
+                và đồng thời tạo sự tham gia chủ động của con.
+              </p>
+            </div>
+      
+            <div>
+              <div class="flex items-center">
+                <p class="text-xl mb-1">12. Tôi muốn tặng chương trình này cho người thân – có được không ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance ">
+                Được. Bạn sẽ nhận một e-Gift Card thiết kế riêng, có thể in hoặc gửi qua email/Zalo – tinh tế,
+                sâu sắc và rất phù hợp để tặng dịp sinh nhật, mốc chuyển giao sự nghiệp, hoặc đơn giản là một lời “tôi hiểu
+                bạn”.
+              </p>
+            </div>
+      
+      
+            <!-- Nhóm 5 -->
+            <h2 id="faq-sub-title-render-5" class="text-2xl font-bold mb-2 mt-3">VỀ ĐĂNG KÝ VÀ HỖ TRỢ</h2>
+            <div>
+              <div class="flex items-center">
+                <p class="text-xl mb-1">13. Làm sao để đăng ký nhanh ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance ">
+                Bạn có thể nhắn tin trực tiếp qua Zalo hoặc Fanpage Coach Moon.
+                Đội ngũ hỗ trợ sẽ hướng dẫn chọn gói, lịch phù hợp và gửi hướng dẫn chi tiết.
+              </p>
+            </div>
+      
+            <div>
+              <div class="flex items-center">
+                <p class="text-xl mb-1">14. Sau 2 buổi coaching, có được hỗ trợ thêm không ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance ">
+                Bạn sẽ được hỗ trợ follow-up 1 lần (qua email hoặc tin nhắn) để đảm bảo bạn ứng dụng được bản đồ hành động.
+                Nếu cần, bạn có thể tiếp tục nâng cấp sang gói đồng hành 3–6 tháng.
+              </p>
+            </div>
+      
+            <div>
+              <div class="flex items-center ">
+                <p class="text-xl mb-1">15. Tôi vẫn chưa chắc mình nên chọn gói nào – có ai hỗ trợ tôi không ? <span
+                    class="text-[var(--pink-600)] ml-2 underline text-sm cursor-pointer" onclick="toggleFAQ(this)">Xem
+                    thêm</span></p>
+              </div>
+              <p class="faq-answer hidden text-balance">
+                Có. Bạn có thể đặt lịch tư vấn 30 phút miễn phí cùng Coach Moon hoặc trợ lý,
+                để được gợi ý gói phù hợp nhất với tình trạng hiện tại (bản thân – sự nghiệp – con cái).
+              </p>
+            </div>
+      
+          </div>
+          </div>
+          </div>
+          </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        if (typeof CKEDITOR !== "undefined") {
+          CKEDITOR.replace('faq-main-title-editor');
+          CKEDITOR.replace('faq-sub-title-1-editor');
+          CKEDITOR.replace('faq-sub-title-2-editor');
+          CKEDITOR.replace('faq-sub-title-3-editor');
+          CKEDITOR.replace('faq-sub-title-4-editor');
+          CKEDITOR.replace('faq-sub-title-5-editor');
+        }
+      });
+
+      function updateFAQTitles() {
+        // Cập nhật tiêu đề chính
+        const mainTitle = CKEDITOR.instances['faq-main-title-editor'].getData();
+        const mainTitleElement = document.getElementById('faq-main-title-render');
+        if (mainTitleElement) {
+          mainTitleElement.innerHTML = mainTitle;
+        }
+
+        // Cập nhật từng tiêu đề phụ
+        const subTitleIds = [
+          'faq-sub-title-1-editor',
+          'faq-sub-title-2-editor',
+          'faq-sub-title-3-editor',
+          'faq-sub-title-4-editor',
+          'faq-sub-title-5-editor'
+        ];
+
+        subTitleIds.forEach((id, index) => {
+          const content = CKEDITOR.instances[id].getData();
+          const target = document.getElementById(`faq-sub-title-render-${index + 1}`);
+          if (target) {
+            target.innerHTML = content;
+          }
+        });
+      }
+
+    </script>
+    <script>
+      function toggleFAQ(button) {
+        const answer = button.previousElementSibling;
+        if (answer.classList.contains("hidden")) {
+          answer.classList.remove("hidden");
+          button.innerText = "Ẩn bớt";
+        } else {
+          answer.classList.add("hidden");
+          button.innerText = "Xem thêm";
+        }
+      }
+    </script>
+
+
+    <section class="bg-gray-100 px-4 py-8 border-b space-y-6">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Chỉnh sửa phần “EBOOK”</h2>
+
+      <!-- Tiêu đề chính -->
+      <label class="block font-semibold">Tiêu đề Ebook (Text thường):</label>
+      <textarea id="ebook-main-title-editor" rows="2" class="w-full p-2 border rounded">NHẬN EBOOK</textarea>
+
+
+      <!-- Nội dung phụ (tiêu đề phụ + mô tả) -->
+      <label class="block font-semibold mt-4">Tiêu đề phụ + Mô tả Ebook (soạn bằng CKEditor):</label>
+      <textarea id="editor-ebook-subcontent" rows="10" class="w-full border rounded"></textarea>
+
+      <button onclick="updateEbookContent()" class="px-4 py-2 bg-pink-600 text-white rounded mt-4">
+        Cập nhật Ebook
+      </button>
+    </section>
+
+    <!-- Render nội dung đã chỉnh -->
+    <div id="ebook-section">
+    <section class="bg-[var(--white)]">
+      <div id="ebook-register"
+        class="py-10 bg-gradient-to-br from-[var(--white)] via-[var(--purple-50)] to-[var(--white)]">
+        <div class="max-w-7xl mx-auto px-6">
+          <h1 id="ebook-main-title-render" class="font-bold text-center mb-5"
+            style="color: var(--main-pink); font-size: clamp(1.5rem, 4vw, 1.875rem);">
+            NHẬN EBOOK
+          </h1>
+  
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+  
+            <!-- Bên trái: Nội dung mô tả + Form -->
+
+            <div  class="space-y-6 text-[var(--gray-800)] text-[17px]">
+              <div id="ebook-description-render">
+              <p class="font-semibold text-3xl">7 SAI LẦM KHI TÁI ĐỊNH HƯỚNG SỰ NGHIỆP</p>
+              <h5 c lass="font-semibold text-xl text-[var(--purple-700)]">
+                Nhận ngay Ebook miễn phí để định hướng đúng đắn và vững vàng hơn trên hành trình sự nghiệp của bạn!
+              </h5>
+            </div>
+              <!-- Form Đăng ký Ebook -->
+              <form method="post" id="contactFormEbook" class="space-y-6"
+                action="https://script.google.com/macros/s/AKfycbzLASIfp13HRc56Fx2cuLUe1E8-fHl0plrovbkGp9qsQdGUeHJv_fnzRCsSaEyShI-8/exec">
+                <div class="relative">
+                  <input name="name" type="text" placeholder="Họ và tên" required
+                    class="w-full px-4 py-3 rounded border border-[var(--gray-300)] focus:outline-none focus:ring-2 focus:ring-[var(--purple-500)]" />
+                </div>
+  
+                <div class="relative">
+                  <input name="email" type="email" placeholder="Email" required
+                    class="w-full px-4 py-3 rounded border border-[var(--gray-300)] focus:outline-none focus:ring-2 focus:ring-[var(--purple-500)]" />
+                </div>
+  
+                <button type="submit"
+                  class="w-full bg-gradient-to-r from-[var(--purple-600)] to-[var(--purple-500)] text-[var(--white)] py-3 rounded-full hover:from-[var(--purple-700)] transition duration-300">
+                  NHẬN EBOOK NGAY
+                </button>
+  
+                <div id="loadingSpinnerEbook" class="hidden flex justify-center">
+                  <div class="animate-spin rounded-full h-8 w-8 border-t-4 border-[var(--purple-600)] border-opacity-30">
+                  </div>
+                </div>
+  
+                <p id="toastEbookEbook"
+                  class="text-[var(--green-600)] text-center opacity-0 pointer-events-none transition-opacity duration-500">
+                  ✅ Ebook đã được gửi! Hãy kiểm tra email của bạn nhé.
+                </p>
+              </form>
+            </div>
+  
+            <!-- Bên phải: Hình ảnh Ebook -->
+            <div class="flex justify-center">
+              <img src="img/ebookbanner.jpg" alt="Ebook Banner"
+                class="rounded-xl shadow-md max-w-[400px] w-full h-auto" />
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  </div>
+  <!-- CKEditor Script -->
+  <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.replace("ebook-main-title-editor");
+        CKEDITOR.replace("editor-ebook-subcontent");
+
+        // Khi CKEditor ready thì load dữ liệu cũ vào
+        CKEDITOR.instances["editor-ebook-subcontent"].on('instanceReady', function () {
+          const currentDescription = document.getElementById('ebook-description-render')?.innerHTML || "";
+          CKEDITOR.instances["editor-ebook-subcontent"].setData(currentDescription);
+        });
+      }
+
+      // Load tiêu đề chính vào input
+      const currentMainTitle = document.getElementById('ebook-main-title-render')?.innerText || "";
+      document.getElementById('ebook-main-title-input').value = currentMainTitle;
+    });
+
+    function updateEbookContent() {
+      const mainTitle = CKEDITOR.instances['ebook-main-title-editor'].getData();
+      const subContent = CKEDITOR.instances["editor-ebook-subcontent"].getData();
+
+      if (document.getElementById('ebook-main-title-render')) {
+        document.getElementById('ebook-main-title-render').innerHTML = mainTitle;
+      }
+
+      if (document.getElementById('ebook-description-render')) {
+        document.getElementById('ebook-description-render').innerHTML = subContent;
+      }
+    }
+  </script>
+
+
+
+
+  <div class="fixed bottom-4 right-4 z-50">
+    <button onclick="downloadVisibleSection()"
+      class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+      💾 Lưu mục
+    </button>
+  </div>
+
+  <script>
+
+    function addService() {
+      const container = document.getElementById('service-container');
+      const template = document.getElementById('service-template').content.cloneNode(true);
+
+      const previewTitle = template.querySelector('.preview-title');
+      const previewPrice = template.querySelector('.preview-price');
+      const previewImg = template.querySelector('.preview-img');
+      const previewLink = template.querySelector('.preview-link');
+
+      previewTitle.contentEditable = true;
+      previewPrice.contentEditable = true;
+
+      previewImg.onclick = () => {
+        const imgPath = prompt('Nhập đường dẫn ảnh (VD: img/ten-anh.jpg):', previewImg.src);
+        if (imgPath) previewImg.src = imgPath;
+      };
+
+      previewLink.onclick = (e) => {
+        e.preventDefault();
+        const link = prompt('Nhập đường link:', previewLink.href);
+        if (link) previewLink.href = link;
+      };
+
+      container.appendChild(template);
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const slider = document.getElementById('service-container');
+      document.getElementById('prevBtnServices').onclick = () => slider.scrollBy({ left: -300, behavior: 'smooth' });
+      document.getElementById('nextBtnServices').onclick = () => slider.scrollBy({ left: 300, behavior: 'smooth' });
+      addService(); // Thêm một dịch vụ mẫu
+    });
+  </script>
+  <script>
+    function addService() {
+      const container = document.getElementById('service-container');
+      const template = document.getElementById('service-template').content.cloneNode(true);
+
+      const titleInput = template.querySelector('.service-title');
+      // const priceInput = template.querySelector('.service-price');
+      const imgInput = template.querySelector('.service-img');
+      const linkInput = template.querySelector('.service-link');
+
+      const previewTitle = template.querySelector('.preview-title');
+      // const previewPrice = template.querySelector('.preview-price');
+      const previewImg = template.querySelector('.preview-img');
+      const previewLink = template.querySelector('.preview-link');
+
+      const updatePreview = () => {
+        previewTitle.textContent = titleInput.value;
+        // previewPrice.textContent = priceInput.value;
+        previewImg.src = imgInput.value;
+        previewLink.href = linkInput.value;
+      };
+
+      titleInput.addEventListener('input', updatePreview);
+      // priceInput.addEventListener('input', updatePreview);
+      imgInput.addEventListener('input', updatePreview);
+      imgInput.addEventListener('change', updatePreview);
+      linkInput.addEventListener('input', updatePreview);
+
+      updatePreview(); // gọi ngay lần đầu
+      container.appendChild(template);
+    }
+
+    // Tự thêm 1 dịch vụ ban đầu
+    window.addEventListener("DOMContentLoaded", () => addService());
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const imgSelect = document.getElementById("popup-img-select");
+      const imgPreview = document.getElementById("popup-img-preview");
+
+      if (imgSelect && imgPreview) {
+        imgSelect.addEventListener("change", function () {
+          imgPreview.src = imgSelect.value;
+        });
+      }
+    });
+    function openPopup() {
+      document.getElementById("service-popup").classList.remove("hidden");
+    }
+
+    function closePopup() {
+      document.getElementById("service-popup").classList.add("hidden");
+    }
+
+    function saveService() {
+      const title = document.getElementById("popup-title").value || "Tên Dịch Vụ";
+      const img = document.getElementById("popup-img-select").value;
+      const link = document.getElementById("popup-link").value || "#";
+
+      const container = document.getElementById("service-container");
+
+      const html = `
+              <div
+                class="min-w-[55%] sm:min-w-[45%] md:min-w-[33.3333%] flex-shrink-0 rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+                <div class="relative">
+                  <a href="${link}" target="_blank" rel="noopener noreferrer">
+                    <div
+                      class="w-full h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center overflow-hidden rounded-t-xl bg-[var(--white)]">
+                      <img src="${img}" class="max-h-full object-contain" />
+                    </div>
+                  </a>
+                </div>
+                <div class="p-4 bg-[var(--white)]">
+                  <h3 class="font-bold">${title}</h3>
+                  <p class="text-base text-[var(--gray-600)]">Coach Moon</p>
+                  <div class="flex items-center text-[var(--yellow-500)]">
+                    ★★★★★ (5)
+                  </div>
+                </div>
+              </div>
+            `;
+
+      container.insertAdjacentHTML("beforeend", html);
+      closePopup();
+    }
+  </script>
+  <script>
+    function downloadVisibleSection() {
+      const headerContent = document.getElementById('header-preview').innerHTML;
+
+      // Cập nhật nội dung từ form chỉnh sửa nếu có
+      const visibleContent = document.getElementById("output-html").innerHTML;
+      const visibleContent1 = document.getElementById("output1-html").innerHTML;
+      const visibleContent2 = document.getElementById("output2-html").innerHTML;
+      const visibleContent3 = document.getElementById("output3-html").innerHTML;
+      const visibleContent4 = document.getElementById("output4-html").innerHTML;
+      const visibleContent5 = document.getElementById("output5-html").innerHTML;
+      const visibleContent6 = document.getElementById("output6-html").innerHTML;
+      const visibleContent7 = document.getElementById("output7-html").innerHTML;
+      const visibleContent9 = document.getElementById("output9-html").innerHTML;
+      const visibleContent11 = document.getElementById(id = "feedback-output").innerHTML;
+      const visibleContent12 = document.getElementById(id = "faq-output").innerHTML;
+      const visibleContent13 = document.getElementById(id = "ebook-section").innerHTML;
+      // Tạo HTML cho phần nội dung
+      const headerHTML = `
+      <header id="header" class="fixed top-0 left-0 w-full z-50 bg-[var(--white)] shadow-md transition-all duration-500">
+    <div
+      class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between h-auto md:h-28 space-y-4 md:space-y-0 relative">
+
+      <div class="w-full md:w-auto text-center md:text-left">
+        <a href="#banner" class="inline-block">
+          <img src="img/slogan-icon2.png" alt="Coachmoon Logo"
+            class="w-auto object-contain mx-auto md:mx-0 h-24 md:h-40" />
+        </a>
+      </div>
+
+      <div
+        class="w-full flex flex-col md:flex-row md:items-center md:justify-end gap-4 text-[var(--blue-900)] font-poppins">
+
+        <nav class="flex flex-wrap justify-center md:justify-end gap-4">
+          <a href="#contents" class="hover:text-[var(--blue-500)] font-bold">Trang chủ</a>
+          <a href="#about" class="hover:text-[var(--blue-500)] font-bold">Về Coach Moon</a>
+          <a href="#dichvu" class="hover:text-[var(--blue-500)] font-bold">Dịch vụ khai vấn</a>
+          <a href="#subjects" class="hover:text-[var(--blue-500)] font-bold">Đối tượng tham gia</a>
+          <a href="#faq" class="hover:text-[var(--blue-500)] font-bold">FAQ</a>
+        </nav>
+
+        <div class="flex justify-center md:justify-end gap-4">
+          <a href="#register-service"
+            class="font-bold border border-[var(--main-pink)] px-4 py-2 rounded-lg text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition">Đăng
+            ký</a>
+          <a href="#submitform"
+            class="font-bold border border-[var(--main-pink)] px-4 py-2 rounded-lg text-[var(--white)] bg-[var(--main-pink)] hover:bg-[var(--hover-pink)] transition">Đặt
+            lịch</a>
+        </div>
+      </div>
+
+    </div>
+  </header>
+      `;
+
+      // Chèn header vào HTML template
+      const htmlTemplate = `<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoachMoon</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+
+    <style>
+      .scrolled {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      h1 {
+        font-size: var(--fs-3xl);
+      }
+
+      h2 {
+        font-size: var(--fs-2xl);
+      }
+
+      h3 {
+        font-size: var(--fs-xl);
+      }
+
+      h4 {
+        font-size: var(--fs-lg);
+      }
+
+      h5 {
+        font-size: var(--fs-base);
+      }
+
+
+      a {
+        font-size: var(--fs-base);
+      }
+
+      p,
+      li {
+        font-size: var(--fs-base);
+      }
+
+      .text-xs {
+        font-size: var(--fs-xs) !important;
+      }
+
+      .text-sm {
+        font-size: var(--fs-sm) !important;
+      }
+
+      .text-base {
+        font-size: var(--fs-base) !important;
+      }
+
+      .text-lg {
+        font-size: var(--fs-lg) !important;
+      }
+
+      .text-xl {
+        font-size: var(--fs-xl) !important;
+      }
+
+      .text-2xl {
+        font-size: var(--fs-2xl) !important;
+      }
+
+      .text-3xl {
+        font-size: var(--fs-3xl) !important;
+      }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    </head>
+
+    <div id="videoModal"
+      class="fixed inset-0 z-[9999] bg-[var(--black)] bg-opacity-80 hidden flex justify-center items-center">
+      <div class="relative w-[90%] max-w-5xl">
+        <button onclick="closeVideoModal()"
+          class="absolute top-2 right-2 text-[var(--white)] text-3xl font-bold z-10">×</button>
+        <iframe id="modalIframe" class="w-full aspect-video rounded-xl shadow-xl" allowfullscreen></iframe>
+      </div>
+    </div>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const slider = document.querySelector('#dichvu .flex.overflow-x-auto');
+    const prevBtn = document.getElementById('prevBtnProducts');
+    const nextBtn = document.getElementById('nextBtnProducts');
+
+    const scrollAmount = 350; // số pixel mỗi lần cuộn
+
+    if (slider && prevBtn && nextBtn) {
+      prevBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+    }
+  });
+    <\/script>
+
+    <body class="flex flex-col min-h-screen">
+      ${headerContent}
+      ${visibleContent}
+      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"><\/script>
+  <script>
+    const swiper = new Swiper('.mySwiper', {
+      loop: true,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true,
+      },
+    });
+  <\/script>
+      ${visibleContent1}
+      ${visibleContent2}
+      ${visibleContent3}
+      ${visibleContent4}
+      ${visibleContent5}
+      ${visibleContent6}
+      ${visibleContent7}
+      ${visibleContent9}
+      ${visibleContent11}
+      ${visibleContent12}
+      ${visibleContent13}
+
+
+      <div class="fixed bottom-24 md:bottom-6 right-6 z-50 space-y-3">
+    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
+      class="w-14 h-14 bg-[var(--white)] rounded-full shadow-lg hover:scale-110 transition transform duration-300 flex flex-col items-center justify-center space-y-0.5">
+
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[var(--main-pink)]" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+
+      <!-- Chữ Lên đầu -->
+      <span class="text-[10px] text-[var(--main-pink)] font-semibold">Lên đầu</span>
+    </button>
+    <a href="https://www.facebook.com/people/Coach-Moon-Pham/61562358021878/" target="_blank"
+      class="block w-14 h-14 bg-[var(--white)] rounded-full shadow-lg hover:scale-110 transition transform duration-300 flex items-center justify-center">
+      <img src="img/icon/mess.png" alt="Messenger" class="w-7 h-7">
+    </a>
+
+    <a href="https://zalo.me/84903885044" target="_blank"
+      class="block w-14 h-14 bg-[var(--white)] rounded-full shadow-lg hover:scale-110 transition transform duration-300 flex items-center justify-center">
+      <img src="img/icon/zalo.png" alt="Zalo" class="w-7 h-7">
+    </a>
+  </div>
+        <section>
+    <footer id="footer" class="bg-[var(--gray-800)] text-[var(--white)] py-10 text-center absolute w-full">
+      <p>&copy; Coachmoon</p>
+    </footer>
+  </section>
+  <script src="js/script.js"><\/script>
+  <script>
+    const formEbook = document.getElementById('contactFormEbook');
+    const loadingEbook = document.getElementById('loadingSpinnerEbook');
+    const toastEbook = document.getElementById('toastEbookEbook');
+
+    formEbook.addEventListener('submit', function (e) {
+      loadingEbook.classList.remove('hidden'); // hiện spinner
+
+      // Đợi form xử lý (vì form gửi đến Google Script)
+      setTimeout(() => {
+        loadingEbook.classList.add('hidden'); // ẩn spinner
+        toastEbook.classList.remove('opacity-0', 'pointer-events-none');
+        toastEbook.classList.add('opacity-100');
+      }, 3000); // có thể tùy chỉnh delay theo thực tế (3s ở đây là ví dụ)
+    });
+  <\/script>
+  <script>
+    const formService = document.getElementById('contactForm');
+    const loadingService = document.getElementById('loadingSpinner');
+    const toastService = document.getElementById('toast');
+
+    formService.addEventListener('submit', function (e) {
+      // Hiển thị loading
+      loadingService.classList.remove('hidden');
+
+      // Ẩn form để tránh người dùng bấm nhiều lần (tuỳ chọn)
+      formService.querySelector('button[type="submit"]').disabled = true;
+
+      // Mô phỏng xử lý (Google Script xử lý ngầm), nên delay hiển thị toast
+      setTimeout(() => {
+        loadingService.classList.add('hidden');
+        toastService.classList.remove('opacity-0', 'pointer-events-none');
+        toastService.classList.add('opacity-100');
+
+        // Bật lại submit nếu cần
+        formService.querySelector('button[type="submit"]').disabled = false;
+      }, 3000); // Thời gian delay tuỳ ý, 3s là hợp lý
+    });
+  <\/script>
+    </body>
+
+</html>
+`;
+
+      // Tạo Blob và tải xuống
+      const blob = new Blob([htmlTemplate], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
