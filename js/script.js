@@ -196,7 +196,7 @@ function showToast() {
   }
 
 //   E_BOOK
-const scriptURLebook = 'https://script.google.com/macros/s/AKfycbxVhgk8145tPqtdyimEcM_eBidYjqEU8mf35OAMS_830gYWYLs-oiU1-6PkNH1wVCBY/exec';
+const scriptURLebook = 'https://script.google.com/macros/s/AKfycbzV9rbGcMgh4ufH43gBfKuLRaMVM7j0_wggJ4f36nAZMUe4LsLrw5fja-STBMCtuze4/exec';
 const forme = document.getElementById('contactFormEbook');
 const toaste = document.getElementById('toastEbookEbook');
 
